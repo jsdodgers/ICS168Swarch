@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
 		int dir = Random.Range(1,5);
 		speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
 		speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
-		transform.position = new Vector3(Random.Range(-9, 9),Random.Range(-3, 3), 0.0f);
+		transform.position = new Vector3(Random.Range(-3, 3),Random.Range(-3, 3), 0.0f);
 	}
 	
 	// Update is called once per frame
