@@ -11,7 +11,7 @@ public class Login : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-	
+
 	}
 	
 	// Update is called once per frame
@@ -22,6 +22,11 @@ public class Login : MonoBehaviour
 
 	void OnGUI()
 	{
+		float width = Screen.width;
+		float height = Screen.height;
+		textPositionX = (int)(width/3.3f);
+		textPositionY = (int)(height/2.4f);
+
 		GUI.Label(new Rect(textPositionX, textPositionY, 200, 20), "Username: ");
 		GUI.Label(new Rect(textPositionX, GetPasswordY(), 200, 20), "Password: ");
 
