@@ -11,7 +11,7 @@ public class Pellet : MonoBehaviour
 	{
 		pelletSize = Random.Range(1, 4)*0.1f;
 		gameObject.name = "Pellet";
-		transform.position = new Vector3(Random.Range(-67, 67)/10,Random.Range(-30, 30)/10, 0.0f);
+		transform.position = new Vector3(Random.Range(-67, 67)/10.0f,Random.Range(-30, 30)/10.0f, 0.0f);
 		transform.localScale = new Vector3(pelletSize + 0.1f, pelletSize + 0.1f, 0.0f);
 	}
 	
