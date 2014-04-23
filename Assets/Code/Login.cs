@@ -22,6 +22,14 @@ public class Login : MonoBehaviour
 
 	void OnGUI()
 	{
+		if (GUI.GetNameOfFocusedControl()=="password") {
+			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return) {
+				if (player1Name!="") {
+					globalVariables.SetPlayerName(player1Name);
+					Application.LoadLevel(0);
+				}
+			}
+		}
 		float width = Screen.width;
 		float height = Screen.height;
 		textPositionX = (int)(width/2 - (65 + 200)/2);
@@ -29,10 +37,10 @@ public class Login : MonoBehaviour
 		GUI.Label(new Rect(textPositionX, textPositionY, 200, 20), "Username: ");
 		GUI.Label(new Rect(textPositionX, GetPasswordY(), 200, 20), "Password: ");
 
-
 	
 
 		player1Name = GUI.TextField(new Rect(GetInputX(), textPositionY, 200, 20), player1Name);
+		GUI.SetNextControlName("password");
 		player1Password = GUI.PasswordField(new Rect(GetInputX(), GetPasswordY(), 200, 20), player1Password, '*');
 		if(GUI.Button(new Rect(GetInputX(), GetLoginY(), 95, 20), "Login"))
 		{
