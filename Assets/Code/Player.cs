@@ -7,11 +7,13 @@ public class Player : MonoBehaviour
 	public GameObject player;
 	float maxSpeed, speedX, speedY, size;
 	public KeyCode moveLeft, moveRight, moveUp, moveDown;
-	public KeyCode moveLeft2, moveRight2, moveUp2, moveDown2;
+	private KeyCode moveLeft2, moveRight2, moveUp2, moveDown2;
+	bool resetCalled;
 
 	// Use this for initialization
 	void Start()
 	{
+		resetCalled = false;
 		gameObject.name = "Player";
 		globalVariables = (Global)GameObject.FindObjectOfType(typeof(Global));
 		maxSpeed = 3;
@@ -85,6 +87,14 @@ public class Player : MonoBehaviour
 		transform.localScale = new Vector3(Mathf.Sqrt(size), Mathf.Sqrt(size), transform.localScale.z);
 	}
 
+	void resetPlayer() {
+		if (!resetCalled) {
+			Instantiate(player);
+			Destroy(gameObject);
+			resetCalled = true;
+		}
+	}
+
 	void OnTriggerEnter2D(Collider2D coll)
 	{
 		if(coll.gameObject.name == "Pellet")
@@ -92,10 +102,23 @@ public class Player : MonoBehaviour
 			size += coll.gameObject.GetComponent<Pellet>().GetPelletSize();
 		}
 
+		if (coll.gameObject.name == "Player") {
+			Player otherPlayer = coll.gameObject.GetComponent<Player>();
+			if (size > otherPlayer.size) {
+				size += otherPlayer.size;
+				otherPlayer.resetPlayer();
+			}
+			else {
+				if (size==otherPlayer.size) {
+					otherPlayer.resetPlayer();
+				}
+				resetPlayer();
+			}
+		}
+
 		if(coll.gameObject.name == "Wall")
 		{
-			Instantiate(player);
-			Destroy(gameObject);
+			resetPlayer();
 		}
 	}
 
