@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 	public GameObject player;
 	float maxSpeed, speedX, speedY, size;
 	public KeyCode moveLeft, moveRight, moveUp, moveDown;
+	public KeyCode moveLeft2, moveRight2, moveUp2, moveDown2;
 
 	// Use this for initialization
 	void Start()
@@ -45,7 +46,7 @@ public class Player : MonoBehaviour
 
 	void PlayerMoveLeft()
 	{
-		if(Input.GetKeyDown(moveLeft))
+		if(Input.GetKeyDown(moveLeft) || Input.GetKeyDown(moveLeft2))
 		{
 			speedX = -GetCurrentSpeed();
 			speedY = 0;
@@ -54,7 +55,7 @@ public class Player : MonoBehaviour
 
 	void PlayerMoveRight()
 	{
-		if(Input.GetKeyDown(moveRight))
+		if(Input.GetKeyDown(moveRight) || Input.GetKeyDown(moveRight2))
 		{
 			speedX = GetCurrentSpeed();
 			speedY = 0;
@@ -63,7 +64,7 @@ public class Player : MonoBehaviour
 
 	void PlayerMoveUp()
 	{
-		if(Input.GetKeyDown(moveUp))
+		if(Input.GetKeyDown(moveUp) || Input.GetKeyDown(moveUp2))
 		{
 			speedX = 0;
 			speedY = GetCurrentSpeed();
@@ -72,7 +73,7 @@ public class Player : MonoBehaviour
 
 	void PlayerMoveDown()
 	{
-		if(Input.GetKeyDown(moveDown))
+		if(Input.GetKeyDown(moveDown) || Input.GetKeyDown(moveDown2))
 		{
 			speedX = 0;
 			speedY = -GetCurrentSpeed();
