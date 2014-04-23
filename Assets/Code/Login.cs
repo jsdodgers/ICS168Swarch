@@ -24,12 +24,13 @@ public class Login : MonoBehaviour
 	{
 		float width = Screen.width;
 		float height = Screen.height;
-		textPositionX = (int)(width/3.3f);
-		textPositionY = (int)(height/2.4f);
-
+		textPositionX = (int)(width/2 - (65 + 200)/2);
+		textPositionY = (int)(height/2 - (25 + 25 + 20)/2);
 		GUI.Label(new Rect(textPositionX, textPositionY, 200, 20), "Username: ");
 		GUI.Label(new Rect(textPositionX, GetPasswordY(), 200, 20), "Password: ");
 
+
+	
 
 		player1Name = GUI.TextField(new Rect(GetInputX(), textPositionY, 200, 20), player1Name);
 		player1Password = GUI.PasswordField(new Rect(GetInputX(), GetPasswordY(), 200, 20), player1Password, '*');
