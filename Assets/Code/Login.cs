@@ -8,11 +8,13 @@ public class Login : MonoBehaviour
 	public int textPositionX, textPositionY;
 	ArrayList playerNames = new ArrayList();
 	public int error;
-
+	bool remember;
 	// Use this for initialization
 	void Start()
 	{
 		error = 0;
+		remember = PlayerPrefs.GetInt("remember")==1;
+		if (remember) player1Name = PlayerPrefs.GetString("playerName");
 	}
 	
 	// Update is called once per frame
@@ -57,6 +59,10 @@ public class Login : MonoBehaviour
 	
 
 		player1Name = GUI.TextField(new Rect(GetInputX(), textPositionY, 200, 20), player1Name);
+		remember = GUI.Toggle(new Rect(GetInputX()+205,textPositionY,200,20),remember,"Remember Username");
+		if (remember) PlayerPrefs.SetString("playerName",player1Name);
+		else PlayerPrefs.SetString("playerName","");
+		PlayerPrefs.SetInt("remember",(remember?1:0));
 		GUI.SetNextControlName("password");
 		player1Password = GUI.PasswordField(new Rect(GetInputX(), GetPasswordY(), 200, 20), player1Password, '*');
 		if(GUI.Button(new Rect(GetInputX(), GetLoginY(), 95, 20), "Login"))
@@ -74,12 +80,13 @@ public class Login : MonoBehaviour
 		SQLiteDB db = new SQLiteDB();
 		if (db.dbConnect("users.sqlite")) {
 			if (player1Name!="" && player1Password!="") {
+				string p1 = hashedPass();
 				string pass = db.getPassword(player1Name);
 				if (pass==null) {
-					pass = player1Password;
-					db.addUser(player1Name,player1Password);
+					pass = p1;
+					db.addUser(player1Name,p1);
 				}
-				if (pass == player1Password) {
+				if (pass == p1) {
 					db.dbPrintAll();
 					globalVariables.SetPlayerName(player1Name);
 					Application.LoadLevel(0);
@@ -93,7 +100,17 @@ public class Login : MonoBehaviour
 			}
 		}
 	}
-	
+
+	string hashedPass() {
+		System.Security.Cryptography.MD5 md5Hash = System.Security.Cryptography.MD5.Create();
+		byte[] data = md5Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(player1Password));
+		System.Text.StringBuilder sBuilder = new System.Text.StringBuilder();
+		for (int n=0;n<data.Length;n++) {
+			sBuilder.Append(data[n].ToString("x2"));
+		}
+		return sBuilder.ToString();
+	}
+
 	int GetInputX()
 	{
 		return (textPositionX + 65);
