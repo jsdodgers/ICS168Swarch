@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
 		resetCalled = false;
 		gameObject.name = "Player";
 		globalVariables = (Global)GameObject.FindObjectOfType(typeof(Global));
-		maxSpeed = 3;
+		maxSpeed = 4;
 		size = 1;
 		int dir = Random.Range(1,5);
 		speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
@@ -118,7 +118,27 @@ public class Player : MonoBehaviour
 
 		if(coll.gameObject.name == "Wall")
 		{
-			resetPlayer();
+			if (coll.transform.localScale.x == 1) {
+				Debug.Log("WallX");
+				Vector3 vec = transform.position;
+				if (speedX>0 && vec.x>0 || speedX<0 && vec.x<0)
+					vec.x = -vec.x;
+				transform.position = vec;
+
+	//			resetPlayer();
+
+			}
+			else
+			{
+				Debug.Log("WallY");
+				Vector3 vec = transform.position;
+				
+				if (speedY>0 && vec.y>0 || speedY<0 && vec.y<0)
+					vec.y = -vec.y;
+				transform.position = vec;
+				
+				//			resetPlayer();
+			}
 		}
 	}
 
