@@ -118,15 +118,12 @@ public class Player : MonoBehaviour
 
 		if(coll.gameObject.name == "Wall")
 		{
-			if (coll.transform.localScale.x == 1) {
+		/*	if (coll.transform.localScale.x == 1) {
 				Debug.Log("WallX");
 				Vector3 vec = transform.position;
 				if (speedX>0 && vec.x>0 || speedX<0 && vec.x<0)
 					vec.x = -vec.x;
 				transform.position = vec;
-
-	//			resetPlayer();
-
 			}
 			else
 			{
@@ -136,9 +133,10 @@ public class Player : MonoBehaviour
 				if (speedY>0 && vec.y>0 || speedY<0 && vec.y<0)
 					vec.y = -vec.y;
 				transform.position = vec;
-				
-				//			resetPlayer();
 			}
+			*/
+			resetPlayer();
+
 		}
 	}
 
