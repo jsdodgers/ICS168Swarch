@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+
 		resetCalled = false;
 		gameObject.name = "Player";
 		globalVariables = (Global)GameObject.FindObjectOfType(typeof(Global));
