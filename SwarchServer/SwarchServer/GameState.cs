@@ -25,21 +25,24 @@ namespace SwarchServer
 
         void Update()
         {
-            foreach(Player player in playerList)
+            lock (playerList)
             {
-                Queue<Command> prq = player.readQueue;
-                lock(prq)
+                foreach (Player player in playerList)
                 {
-                    while(prq.Count != 0)
+                    Queue<Command> prq = player.readQueue;
+                    lock (prq)
                     {
-                        Command cmd = prq.Dequeue();
-                        switch(cmd.cType)
+                        while (prq.Count != 0)
                         {
-                            case CType.Login:
-                                loginPlayer(cmd.username, cmd.password);
-                                break;
-                            default:
-                                break;
+                            Command cmd = prq.Dequeue();
+                            switch (cmd.cType)
+                            {
+                                case CType.Login:
+                                    loginPlayer(cmd.username, cmd.password);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 }
@@ -65,12 +68,18 @@ namespace SwarchServer
 
         public void addPlayer(Player p)
         {
-            playerList.Add(p);
+            lock (playerList)
+            {
+                playerList.Add(p);
+            }
         }
 
         public void removePlayer(Player p)
         {
-            playerList.Remove(p);
+            lock (playerList)
+            {
+                playerList.Remove(p);
+            }
         }
 
         public int numberOfPlayers()

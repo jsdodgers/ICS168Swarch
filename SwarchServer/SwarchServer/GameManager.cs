@@ -20,7 +20,12 @@ namespace SwarchServer
         {
             Console.WriteLine("Multiplayer Swarch Server:");
             Console.WriteLine("Please enter a command.  For available commands type HELP.");
-
+     //       SQLiteDatabase db = new SQLiteDatabase();
+       //     Dictionary<String, String> insertData = new Dictionary<String, String>();
+       //     insertData.Add("USERNAME", "1");
+       //     insertData.Add("PASSWORD", "2");
+       //     db.Insert("USERS", insertData);
+            
             while(true)
             {
                 switch (Console.ReadLine())

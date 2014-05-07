@@ -1,24 +1,24 @@
 using System;
-using Mono.Data.Sqlite;
-//using System.Data.Sqlite;
+//using Mono.Data.Sqlite;
+using System.Data.SQLite;
 using System.Data;
 
 namespace SwarchServer
 {
-    public class SqliteDB
+    public class SQLiteDB
     {
-	    SqliteConnection dbcon = null;
-	    public SqliteDB ()
+	    SQLiteConnection dbcon = null;
+	    public SQLiteDB ()
 	    {
             
 	    }
 
 	    // for debugging purposes
 	    public void dbPrintAll() {
-		    SqliteCommand dbcmd = dbcon.CreateCommand();
+		    SQLiteCommand dbcmd = dbcon.CreateCommand();
 		    string Sql = "SELECT username, password FROM users";
 		    dbcmd.CommandText = Sql;
-		    SqliteDataReader reader = dbcmd.ExecuteReader();
+		    SQLiteDataReader reader = dbcmd.ExecuteReader();
 		    string s = "";
 		    while (reader.Read()) {
 			    string username = reader.GetString(0);
@@ -36,13 +36,13 @@ namespace SwarchServer
 	    // this retrieves the password from the database to
 	    // compare in another method to the password that the user inputs
 	    public string getPassword(string username) {
-		    SqliteCommand dbcmd = dbcon.CreateCommand();
+		    SQLiteCommand dbcmd = dbcon.CreateCommand();
 		    string Sql = "SELECT password FROM users WHERE username=?";
 		    dbcmd.CommandText = Sql;
-		    SqliteParameter param = new SqliteParameter();
+		    SQLiteParameter param = new SQLiteParameter();
 		    param.Value = username;
 		    dbcmd.Parameters.Add(param);
-		    SqliteDataReader reader = dbcmd.ExecuteReader();
+		    SQLiteDataReader reader = dbcmd.ExecuteReader();
 		    string s = null;
 		    while (reader.Read()) {
 			    s = reader.GetString(0);
@@ -61,16 +61,16 @@ namespace SwarchServer
 
 	    // add users to the database
 	    public bool addUser(string username, string password) {
-		    SqliteCommand dbcmd = dbcon.CreateCommand();
+		    SQLiteCommand dbcmd = dbcon.CreateCommand();
 		    string Sql = "INSERT INTO users VALUES (?,?);";
 		    dbcmd.CommandText = Sql;
-		    SqliteParameter param1 = new SqliteParameter();
-		    SqliteParameter param2 = new SqliteParameter();
+		    SQLiteParameter param1 = new SQLiteParameter();
+		    SQLiteParameter param2 = new SQLiteParameter();
 		    param1.Value = username;
 		    param2.Value = password;
 		    dbcmd.Parameters.Add(param1);
 		    dbcmd.Parameters.Add(param2);
-		    SqliteDataReader reader = dbcmd.ExecuteReader();
+		    SQLiteDataReader reader = dbcmd.ExecuteReader();
 
 
 		    reader.Close();
@@ -87,9 +87,9 @@ namespace SwarchServer
 	    // finds the database file on the user's harddrive to open
 	    public bool dbConnect(string database) {
 		    if (dbcon!=null) dbDisconnect();
-            string connectionString = "Data Source=" + database;
-		    dbcon = new SqliteConnection(connectionString);
-            //dbcon.Open();
+            string connectionString = "Data Source=Databases/" + database;
+		    dbcon = new SQLiteConnection(connectionString);
+             dbcon.Open();
 		    if (dbcon!=null) return true;
 		    return false;
 
@@ -97,7 +97,7 @@ namespace SwarchServer
 
 	    // closes database file
 	    public void dbDisconnect() {
-		//    dbcon.Close();
+		    dbcon.Close();
 		    dbcon = null;
 	    }
 
