@@ -9,6 +9,7 @@ public class Login : MonoBehaviour
 	ArrayList playerNames = new ArrayList();
 	public int error;
 	bool remember;
+	
 	// Use this for initialization
 	void Start()
 	{
@@ -16,13 +17,9 @@ public class Login : MonoBehaviour
 		remember = PlayerPrefs.GetInt("remember")==1;
 		if (remember) player1Name = PlayerPrefs.GetString("playerName");
 	}
-	
-	// Update is called once per frame
-	void Update()
-	{
-	
-	}
 
+  // this builds the UI and checks for username/password
+  // it also handles the buttons and what happens when they're clicked on
 	void OnGUI()
 	{
 		if (GUI.GetNameOfFocusedControl()=="password" || player1Password!="") {
@@ -101,9 +98,17 @@ public class Login : MonoBehaviour
 		}
 	}
 
+  // encrypt the password here
 	string hashedPass() {
+	
+    // create a new encrypter
 		System.Security.Cryptography.MD5 md5Hash = System.Security.Cryptography.MD5.Create();
+		
+		// array to store hashed password into -- one array per password...
+		// take the password, turn it into bytes, hash the bytes, then store it into byte[]
 		byte[] data = md5Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(player1Password));
+
+		// further encryption
 		System.Text.StringBuilder sBuilder = new System.Text.StringBuilder();
 		for (int n=0;n<data.Length;n++) {
 			sBuilder.Append(data[n].ToString("x2"));
