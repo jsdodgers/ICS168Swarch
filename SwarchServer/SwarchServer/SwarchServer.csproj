@@ -54,9 +54,6 @@
     <Compile Include="GameState.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLiteDatabase.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="SQLiteDB.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -78,6 +78,8 @@ namespace SwarchServer
             else
             {
                 gameStarted = true;
+                gs.startGame();
+                Console.WriteLine("The game has started.  Good luck and have fun!");
             }
         }
 
@@ -108,7 +110,6 @@ namespace SwarchServer
 
         private static void addPlayer(TcpClient client, NetworkStream stream)
         {
-            Console.WriteLine("Player has connected.");
             gs.addPlayer(new Player(client, stream, gs.numberOfPlayers(), gs));
         }
 

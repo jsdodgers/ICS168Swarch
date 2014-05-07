@@ -5,8 +5,9 @@ using System.Text;
 
 namespace SwarchServer
 {
-    public enum CType : byte {Login, StartGame, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
-    
+    public enum CType : byte {Login, StartGame, NewPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
+    public enum LoginResponseType : int {FailedLogin = 0, SucceededLogin = 1 << 0, NewUser = 1 << 1}
+
     class Command
     {
         public string message, username, password;
@@ -15,6 +16,39 @@ namespace SwarchServer
         private int playerNumber;
         public int[] scores;
         private const char delimiter = ':';
+        public LoginResponseType loginResponse;
+
+        public static Command loginCommand(long ts, LoginResponseType t)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.Login;
+            newCommand.loginResponse = t;
+            newCommand.message = newCommand.cType + ":" + t + ";";
+
+            return newCommand;
+        }
+
+        public static Command startGameCommand(long ts)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.StartGame;
+            newCommand.message = newCommand.cType + ";";
+
+            return newCommand;
+        }
+
+        public static Command newPlayerCommand(long ts, string username, int n)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.NewPlayer;
+            newCommand.username = username;
+            newCommand.playerNumber = n;
+            newCommand.message = newCommand.cType + ":" + newCommand.username + ":" + newCommand.playerNumber + ";";
+            return newCommand;
+        }
 
         public static Command unwrap(string message)
         {

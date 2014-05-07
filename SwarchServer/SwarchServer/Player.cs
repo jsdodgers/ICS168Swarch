@@ -10,8 +10,8 @@ namespace SwarchServer
 {
     class Player
     {
-        private string playerName;
-        private int playerNumber;
+        public string playerName;
+        public int playerNumber;
         private int score = 0;
         private float size, x, y;
         private bool ready = false;
@@ -44,6 +44,11 @@ namespace SwarchServer
             int dir = rand.Next(1, 5);
             x = rand.Next(-30, 30) / 10.0f;
             y = rand.Next(-30, 30) / 10.0f;
+        }
+
+        public void sendCommand(Command c)
+        {
+            writeQueue.Enqueue(c);
         }
 
         public float getX()
@@ -94,13 +99,27 @@ namespace SwarchServer
                     string[] stra = str.Split(new char[] { ';' });
                     for(int i = 0; i < stra.Length - 1; i++)
                     {
-                        readQueue.Enqueue(Command.unwrap(stra[i]));
+                        lock(readQueue)
+                        {
+                            readQueue.Enqueue(Command.unwrap(stra[i]));
+                        }
                     }
                 }
 
                 if (writeQueue.Count() > 0)
                 {
-                    
+                    lock (writeQueue)
+                    {
+                        Command newCommand = writeQueue.Dequeue();
+                        string message = newCommand.message;
+                        if(message == null)
+                        {
+                            
+                        }
+                        byte[] bytes = Encoding.UTF8.GetBytes(message);
+                        mStream.Write(bytes, 0, bytes.Length);
+                        mStream.Flush();
+                    }
                 }
             }
         }
