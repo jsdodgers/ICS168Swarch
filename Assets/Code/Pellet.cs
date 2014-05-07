@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Swarch {
 public class Pellet : MonoBehaviour
 {
 	public GameObject pellet;
@@ -34,4 +35,5 @@ public class Pellet : MonoBehaviour
 	{
 		return pelletSize;
 	}
+}
 }

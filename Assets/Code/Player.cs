@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using Mono.Data.Sqlite;
 
+namespace Swarch {
 public class Player : MonoBehaviour
 {
 	Global globalVariables;
@@ -149,4 +150,5 @@ public class Player : MonoBehaviour
 			Application.LoadLevel(1);
 		}
 	}
+}
 }

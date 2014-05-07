@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Swarch {
 public class Global : MonoBehaviour
 {
 	public string globalPlayer1Name;
@@ -26,4 +27,5 @@ public class Global : MonoBehaviour
 	{
 		return globalPlayer1Name;
 	}
+}
 }
