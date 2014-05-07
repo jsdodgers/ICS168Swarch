@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Threading;
+using System.Text;
 
 
 namespace Swarch {
@@ -66,8 +67,9 @@ namespace Swarch {
 			GUI.Label(new Rect(errorPositionX,GetConnectionY(),200,20),connectionString);
 			GUI.skin.label.alignment = a;
 
-			player1Name = GUI.TextField(new Rect(GetInputX(), textPositionY, 200, 20), player1Name);
+
 			connection.socks.SERVER_LOCATION = GUI.TextField(new Rect(GetInputX(),GetIPY(),200,20),connection.socks.SERVER_LOCATION);
+			player1Name = GUI.TextField(new Rect(GetInputX(), textPositionY, 200, 20), player1Name);
 			PlayerPrefs.SetString("IP",connection.socks.SERVER_LOCATION);
 			remember = GUI.Toggle(new Rect(GetInputX()+205,textPositionY,200,20),remember,"Remember Username");
 			if (remember) PlayerPrefs.SetString("playerName",player1Name);
@@ -75,11 +77,12 @@ namespace Swarch {
 			PlayerPrefs.SetInt("remember",(remember?1:0));
 			GUI.SetNextControlName("password");
 			player1Password = GUI.PasswordField(new Rect(GetInputX(), GetPasswordY(), 200, 20), player1Password, '*');
+			GUI.enabled = !loggingIn;
 			if(GUI.Button(new Rect(GetInputX(), GetLoginY(), 95, 20), "Login"))
 			{
 				login();
 			}
-
+			GUI.enabled = true;
 			if(GUI.Button(new Rect(GetInputX() + 105, GetLoginY(), 95, 20), "Quit"))
 			{
 				Application.Quit();
@@ -116,12 +119,24 @@ namespace Swarch {
 			}*/
 		}
 
+		void actualLogin() {
+//			Command comm = Command.PaddleUpdate(gameProcess.getTimeStamp(),this);
+//			byte[] bytes = Encoding.UTF8.GetBytes(comm.message + ";");
+//			gameProcess.socks.SendTCPPacket(bytes);
+			Command comm = Command.Login(0,player1Name,hashedPass());
+			byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
+			connection.socks.SendTCPPacket(bytes);
+		
+		}
+
 		void connectToServer() {
 			if (connection.socks.Connect()) {
 				connectionString = "Connect Succeeded";
+				actualLogin();
 			}
 			else {
 				connectionString = "Connect Failed";
+				loggingIn = false;
 			}
 		}
 
