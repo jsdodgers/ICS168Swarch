@@ -20,7 +20,7 @@ namespace Swarch {
 		
 		DateTime dt;
 		System.Diagnostics.Stopwatch uniClock;
-		
+
 		// Use this for initialization
 		void Start () {
 			connected = false;

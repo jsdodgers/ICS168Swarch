@@ -161,6 +161,7 @@ namespace Swarch {
 
 		int GetFailureY()
 		{
+			;
 			return GetIPY() - 25;
 		}
 	}
