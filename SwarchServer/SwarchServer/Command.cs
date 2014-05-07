@@ -18,7 +18,12 @@ namespace SwarchServer
 
         public static Command unwrap(string message)
         {
+            //Console.WriteLine(message);
             string[] data = message.Split(new char[] {delimiter});
+            /*foreach(string str in data)
+            {
+                Console.WriteLine(str);
+            }*/
             Command newCommand;
             switch((CType)Enum.Parse(typeof(CType), data[0]))
             {

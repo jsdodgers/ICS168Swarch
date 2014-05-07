@@ -30,7 +30,7 @@ namespace SwarchServer
             mStream = stream;
             mGameState = gs;
             writeQueue = new Queue<Command>();
-            writeQueue = new Queue<Command>();
+            readQueue = new Queue<Command>();
             mThread = new Thread(new ThreadStart(netUpdate));
             setResetPosition();
 
@@ -92,7 +92,7 @@ namespace SwarchServer
                     sBuilder.Append(Encoding.UTF8.GetString(bytes, 0, cmdLength));
                     string str = sBuilder.ToString();
                     string[] stra = str.Split(new char[] { ';' });
-                    for(int i = 0; i < stra.Length; i++)
+                    for(int i = 0; i < stra.Length - 1; i++)
                     {
                         readQueue.Enqueue(Command.unwrap(stra[i]));
                     }

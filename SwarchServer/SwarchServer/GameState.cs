@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SwarchServer
 {
     class GameState
     {
         private ArrayList playerList;
+        public bool isServerRunning = true;
+        public SQLiteDB db = new SQLiteDB();
+        Thread gameLoop;
 
         public GameState()
         {
             playerList = new ArrayList();
+
+            gameLoop = new Thread(new ThreadStart(serverLoop));
+            gameLoop.Start();
+            db.dbConnect("users.sqlite");
         }
 
         void Update()
@@ -38,10 +46,21 @@ namespace SwarchServer
             }
         }
 
-        public static void loginPlayer(string username, string password)
+        public void loginPlayer(string username, string password)
         {
-            Console.WriteLine("Username: " + username);
-            Console.WriteLine("Password: " + password);
+            if(username != "" && password != "")
+            {
+                string realPassword = db.getPassword(username);
+                if(realPassword == null)
+                {
+                    realPassword = password;
+                    db.addUser(username, password);
+                }
+                if(realPassword == password)
+                {
+                    db.dbPrintAll();
+                }
+            }
         }
 
         public void addPlayer(Player p)
@@ -57,6 +76,20 @@ namespace SwarchServer
         public int numberOfPlayers()
         {
             return playerList.Count;
+        }
+
+        public void stopServer()
+        {
+            isServerRunning = false;
+            gameLoop.Abort();
+        }
+
+        private void serverLoop()
+        {
+            while(isServerRunning)
+            {
+                Update();
+            }
         }
     }
 }

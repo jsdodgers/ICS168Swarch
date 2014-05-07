@@ -122,6 +122,7 @@ namespace SwarchServer
             if(gs != null)
             {
                 gameStarted = false;
+                gs.stopServer();
                 gs = null;
                 listener = null;
 
