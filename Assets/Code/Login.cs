@@ -12,10 +12,13 @@ namespace Swarch {
 		public string player1Name, player1Password;
 		public int textPositionX, textPositionY;
 		public Connection connection;
-		ArrayList playerNames = new ArrayList();
+		public ArrayList playerNames = new ArrayList();
 		public int error;
 		bool remember;
 		bool loggingIn;
+		bool loggedIn;
+		bool connected;
+		bool newAccount;
 		string connectionString = "";
 		// Use this for initialization
 		void Start()
@@ -24,6 +27,9 @@ namespace Swarch {
 			connection.socks.SERVER_LOCATION = PlayerPrefs.GetString("IP");
 			error = 0;
 			loggingIn = false;
+			connected = false;
+			loggedIn = false;
+			newAccount = false;
 			remember = PlayerPrefs.GetInt("remember")==1;
 			if (remember) player1Name = PlayerPrefs.GetString("playerName");
 		}
@@ -36,15 +42,17 @@ namespace Swarch {
 
 		void OnGUI()
 		{
+			float width = Screen.width;
+			float height = Screen.height;
+
+			if (!loggedIn) {
 			if (GUI.GetNameOfFocusedControl()=="password" || player1Password!="") {
 				if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return) {
-					if (player1Name!="") {
+					if (player1Name!="" && !loggingIn) {
 						login();
 					}
 				}
 			}
-			float width = Screen.width;
-			float height = Screen.height;
 			textPositionX = (int)(width/2 - (65 + 200)/2);
 			textPositionY = (int)(height/2 - (25 + 25 + 20)/2);
 			GUI.Label(new Rect(textPositionX, textPositionY, 200, 20), "Username: ");
@@ -55,15 +63,13 @@ namespace Swarch {
 			float errorPositionX = GetInputX();
 			float errorPositionY = GetFailureY();
 			TextAnchor a = GUI.skin.label.alignment;
+			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 			if (error == 1) {
-				GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 				GUI.Label(new Rect(errorPositionX,errorPositionY,200,20),"Incorrect Password.");
 			}
 			else if (error == 2) {
-				GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 				GUI.Label(new Rect(errorPositionX,errorPositionY,200,20),"Enter username and password.");
 			}
-			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 			GUI.Label(new Rect(errorPositionX,GetConnectionY(),200,20),connectionString);
 			GUI.skin.label.alignment = a;
 
@@ -87,52 +93,73 @@ namespace Swarch {
 			{
 				Application.Quit();
 			}
+
+			}
+			else {
+				int old = GUI.skin.label.fontSize;
+				GUI.skin.label.fontSize = 30;
+				TextAnchor a = GUI.skin.label.alignment;
+				GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+				GUI.Label(new Rect(width/2 - 200,height/2 - 100,400,200),(newAccount?"Account Created!\n":"")+"Logged in.\nWaiting for game to start.");
+				GUI.skin.label.alignment = a;
+				GUI.skin.label.fontSize = 16;
+				for (int n=0;n<playerNames.Count;n++) {
+					GUI.Label(new Rect(5,5+20*n,200,29),(n+1) + ". " + playerNames[n]);
+				}
+				GUI.skin.label.fontSize = old;
+				if(GUI.Button(new Rect(width/2 + 120,height/2 - 70, 95, 20), "Quit"))
+				{
+					Application.Quit();
+				}
+			}
 		}
 
 		void login() {
-			loggingIn = true;
-			connectionString = "Connecting...";
-			Thread t = new Thread(new ThreadStart(connectToServer));
-			t.Start();
-			/*
-			SQLiteDB db = new SQLiteDB();
-			if (db.dbConnect("users.sqlite")) {
-				if (player1Name!="" && player1Password!="") {
-					string p1 = hashedPass();
-					string pass = db.getPassword(player1Name);
-					if (pass==null) {
-						pass = p1;
-						db.addUser(player1Name,p1);
-					}
-					if (pass == p1) {
-						db.dbPrintAll();
-						globalVariables.SetPlayerName(player1Name);
-			//			Application.LoadLevel(0);
-					}
-					else {
-						error = 1;
-					}
-				}
-				else {
-					error = 2;
-				}
-			}*/
+			if (!connected) {
+				loggingIn = true;
+				connectionString = "Connecting...";
+				Thread t = new Thread(new ThreadStart(connectToServer));
+				t.Start();
+			}
+			else {
+				actualLogin();
+			}
+		}
+
+		public void succeededConnection() {
+			loggedIn = true;
+			loggingIn = false;
+			error = 0;
+		}
+
+		public void failedConnection() {
+			loggingIn = false;
+			error = 1;
+		}
+
+		public void newUser() {
+			newAccount = true;
 		}
 
 		void actualLogin() {
 //			Command comm = Command.PaddleUpdate(gameProcess.getTimeStamp(),this);
 //			byte[] bytes = Encoding.UTF8.GetBytes(comm.message + ";");
 //			gameProcess.socks.SendTCPPacket(bytes);
-			Command comm = Command.Login(0,player1Name,hashedPass());
-			byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
-			connection.socks.SendTCPPacket(bytes);
-		
+			if (player1Name!="" && player1Password!="") {
+				Command comm = Command.Login(0,player1Name,hashedPass());
+				byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
+				connection.socks.SendTCPPacket(bytes);
+			}
+			else {
+				error = 2;
+			}
 		}
 
 		void connectToServer() {
 			if (connection.socks.Connect()) {
 				connectionString = "Connect Succeeded";
 				actualLogin();
+				connected = true;
 			}
 			else {
 				connectionString = "Connect Failed";

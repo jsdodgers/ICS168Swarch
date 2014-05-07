@@ -33,8 +33,36 @@ namespace Swarch {
 		
 		// Update is called once per frame
 		void Update () {
-		//	lock(socks.recvBuffer) {
-		//		while (socks.recvBuffer.Count !=0) {
+			lock(socks.recvBuffer) {
+				while (socks.recvBuffer.Count !=0) {
+					string curr = (string)socks.recvBuffer.Dequeue();
+					Command comm = Command.unwrap(curr);
+					Debug.Log(comm.cType);
+					switch(comm.cType) {
+					case CType.Login:
+						LoginResponseType type = comm.loginResponse;
+						Login loginScreen = GameObject.Find("Login").GetComponent<Login>();
+						if (!((type & LoginResponseType.NewUser)==LoginResponseType.FailedLogin)) {
+							loginScreen.newUser();
+						}
+						if (!((type & LoginResponseType.SucceededLogin)==LoginResponseType.FailedLogin)) {
+							loginScreen.succeededConnection();
+						}
+						if (type==LoginResponseType.FailedLogin) {
+							loginScreen.failedConnection();
+						}
+						break;
+					case CType.NewPlayer:
+						string playerName = comm.username;
+						Login loginScreen2 = GameObject.Find("Login").GetComponent<Login>();
+						loginScreen2.playerNames.Add(playerName);
+						break;
+					case CType.StartGame:
+						Application.LoadLevel(0);
+						break;
+					default:
+						break;
+					}
 					/*
 				string curr = (string)socks.recvBuffer.Dequeue();
 				Command comm = Command.unwrap(curr);
@@ -65,8 +93,8 @@ namespace Swarch {
 						break;
 					
 				}*/
-		//		}
-		//	}
+				}
+			}
 		}
 		/*
 		public void setOtherPaddlePos(float pos) {

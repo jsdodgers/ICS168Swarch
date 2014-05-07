@@ -30,18 +30,18 @@ public class ThreadSock : MonoBehaviour {
 	public void Service() {	
 		try {
 		 	while (socks.connected) {
-				/*
 				byte[] data = new byte[socks.client.ReceiveBufferSize];
 				Int32 bytes = nws.Read(data,0,data.Length);
 				lock (socks.recvBuffer) {
 					StringBuilder str = new StringBuilder();
 					str.Append(Encoding.UTF8.GetString(data,0,bytes));
 					string stri = str.ToString();
+						Debug.Log("Received: " + stri);
 					string[] s = stri.Split(new char[]{';'});
 					for (int n=0;n<s.Length-1;n++) {
 						socks.recvBuffer.Enqueue(s[n]);
 					}
-				}*/
+				}
 			}
 		}
 		catch (Exception ex) {
