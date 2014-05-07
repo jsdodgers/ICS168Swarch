@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using Mono.Data.Sqlite;
 
 namespace Swarch {
 public class Player : MonoBehaviour
@@ -147,7 +146,7 @@ public class Player : MonoBehaviour
 	{
 		GUI.Label(new Rect(10, 10, 200, 20), globalVariables.GetPlayerName());
 		if (GUI.Button(new Rect(Screen.width-70,10,60,25),"Logout")) {
-			Application.LoadLevel(1);
+			Application.LoadLevel(0);
 		}
 	}
 }

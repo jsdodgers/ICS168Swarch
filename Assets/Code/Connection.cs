@@ -58,7 +58,7 @@ namespace Swarch {
 						loginScreen2.playerNames.Add(playerName);
 						break;
 					case CType.StartGame:
-						Application.LoadLevel(0);
+						Application.LoadLevel(1);
 						break;
 					default:
 						break;
