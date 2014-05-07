@@ -18,17 +18,16 @@ namespace Swarch {
 		
 		//	public GUIS gui;
 		
-		DateTime dt;
-		System.Diagnostics.Stopwatch uniClock;
+	//	DateTime dt;
+	//	System.Diagnostics.Stopwatch uniClock;
 
 		// Use this for initialization
 		void Start () {
 			connected = false;
 			gameStarted = false;
 			socks = (Sockets)gameObject.AddComponent("Sockets");
-
-			uniClock = new System.Diagnostics.Stopwatch();
-			dt = NTPTime.getNTPTime(ref uniClock);
+		//	uniClock = new System.Diagnostics.Stopwatch();
+		//	dt = NTPTime.getNTPTime(ref uniClock);
 			
 		}
 		
@@ -81,9 +80,9 @@ namespace Swarch {
 			p.transform.position = new Vector3(p.transform.position.x,pos,p.transform.position.z);
 		}
 		*/
-		public long getTimeStamp() {
-			return (dt.AddMinutes(uniClock.Elapsed.Minutes).AddSeconds(uniClock.Elapsed.Seconds).AddMilliseconds(uniClock.Elapsed.Milliseconds)).Ticks;
-		}
+	//	public long getTimeStamp() {
+	//		return (dt.AddMinutes(uniClock.Elapsed.Minutes).AddSeconds(uniClock.Elapsed.Seconds).AddMilliseconds(uniClock.Elapsed.Milliseconds)).Ticks;
+	//	}
 		
 	}
 }

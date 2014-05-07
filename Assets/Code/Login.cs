@@ -91,6 +91,7 @@ namespace Swarch {
 			connectionString = "Connecting...";
 			Thread t = new Thread(new ThreadStart(connectToServer));
 			t.Start();
+			/*
 			SQLiteDB db = new SQLiteDB();
 			if (db.dbConnect("users.sqlite")) {
 				if (player1Name!="" && player1Password!="") {
@@ -112,7 +113,7 @@ namespace Swarch {
 				else {
 					error = 2;
 				}
-			}
+			}*/
 		}
 
 		void connectToServer() {
