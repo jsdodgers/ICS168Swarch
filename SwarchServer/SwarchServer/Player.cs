@@ -15,18 +15,20 @@ namespace SwarchServer
         private int score = 0;
         private float size, x, y;
         private bool ready = false;
-        
+
+        private GameState mGameState;
         private Thread mThread;
         private NetworkStream mStream;
         private TcpClient mClient;
-        private Queue<Command> writeQueue;
-        private Queue<Command> readQueue;
+        public Queue<Command> writeQueue;
+        public Queue<Command> readQueue;
 
-        public Player(TcpClient client, NetworkStream stream, int number)
+        public Player(TcpClient client, NetworkStream stream, int number, GameState gs)
         {
             playerNumber = number;
             mClient = client;
             mStream = stream;
+            mGameState = gs;
             writeQueue = new Queue<Command>();
             writeQueue = new Queue<Command>();
             mThread = new Thread(new ThreadStart(netUpdate));
@@ -64,21 +66,43 @@ namespace SwarchServer
             return score;
         }
 
+        public void disconnect()
+        {
+            mStream.Close(20);
+            mClient.Close();
+            mThread.Abort();
+            mGameState.removePlayer(this);
+        }
+
         private void netUpdate()
         {
-            /*while (false)   // disabled the loop for now
+            while (true)
             {
-                // read one update from queue
+                if(!mClient.Connected)
+                {
+                    disconnect();
+                    break;
+                }
+                
                 if (mStream.DataAvailable)
                 {
-                    // read and parse a command from the stream
+                    byte[] bytes = new byte[mClient.ReceiveBufferSize];
+                    Int32 cmdLength = mStream.Read(bytes, 0, bytes.Length);
+                    StringBuilder sBuilder = new StringBuilder();
+                    sBuilder.Append(Encoding.UTF8.GetString(bytes, 0, cmdLength));
+                    string str = sBuilder.ToString();
+                    string[] stra = str.Split(new char[] { ';' });
+                    for(int i = 0; i < stra.Length; i++)
+                    {
+                        readQueue.Enqueue(Command.unwrap(stra[i]));
+                    }
                 }
-                // write one update to stream
-                if (commandQueue.Count() > 0)
+
+                if (writeQueue.Count() > 0)
                 {
-                    // write a command (just one) out to the stream
+                    
                 }
-            }*/
+            }
         }
     }
 }

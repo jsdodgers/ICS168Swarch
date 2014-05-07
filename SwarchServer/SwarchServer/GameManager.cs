@@ -104,7 +104,7 @@ namespace SwarchServer
         private static void addPlayer(TcpClient client, NetworkStream stream)
         {
             Console.WriteLine("Player has connected.");
-            gs.addPlayer(new Player(client, stream, gs.numberOfPlayers()));
+            gs.addPlayer(new Player(client, stream, gs.numberOfPlayers(), gs));
         }
 
         private static void help()
