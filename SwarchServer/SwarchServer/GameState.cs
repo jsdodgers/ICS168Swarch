@@ -23,8 +23,8 @@ namespace SwarchServer
             roomID = id;
             playerList = new ArrayList();
 
-            gameLoop = new Thread(new ThreadStart(serverLoop));
-            gameLoop.Start();
+            //gameLoop = new Thread(new ThreadStart(serverLoop));
+            //gameLoop.Start();
             //db.dbConnect("users.sqlite");
         }
 
@@ -125,7 +125,7 @@ namespace SwarchServer
             return playerList.Count;
         }
 
-        public void stopServer()
+        /*public void stopServer()
         {
             isServerRunning = false;
             gameLoop.Abort();
@@ -137,6 +137,6 @@ namespace SwarchServer
             {
                 Update();
             }
-        }
+        }*/
     }
 }

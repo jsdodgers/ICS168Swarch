@@ -15,7 +15,7 @@ namespace SwarchServer
         private static PlayerListener listener;
         public static ArrayList playerList = new ArrayList();
         public static int numberOfCurrentPlayers = 0;
-        public static const int NUMBER_OF_GAMES = 4;
+        public const int NUMBER_OF_GAMES = 4;
         public static GameState[] gss = null;
         public static SQLiteDB db = new SQLiteDB();
         static Thread gameLoop;
@@ -222,7 +222,7 @@ namespace SwarchServer
             }
         }
 
-        private static void reset(GameState gs)
+        /*private static void reset(GameState gs)
         {
             if(gs != null)
             {
@@ -238,7 +238,7 @@ namespace SwarchServer
                 Console.WriteLine("No game exists, yet. Dummy.");
             }
             
-        }
+        }*/
 
         private static void quit()
         {
