@@ -84,7 +84,7 @@ namespace SwarchServer
                 gameStarted = false;
                 for (int i = 0; i < NUMBER_OF_GAMES; i++ )
                 {
-                    gss[i] = new GameState("Foo foo for you: " + i, i);
+                    gss[i] = new GameState("Foo foo for you " + i, i);
                 }
                 
                 listener = new PlayerListener();
