@@ -16,7 +16,7 @@ namespace SwarchServer
         private float size, x, y;
         private bool ready = false;
 
-        private GameState mGameState;
+        private bool isConnected = true;
         private Thread mThread;
         private NetworkStream mStream;
         private TcpClient mClient;
@@ -72,17 +72,23 @@ namespace SwarchServer
 
         public void disconnect()
         {
-            mStream.Close(20);
-            mClient.Close();
-            mThread.Abort();
-            mGameState.removePlayer(this);
+            if (mClient.Connected || isConnected)
+            {
+                mThread.Abort();
+                isConnected = false;
+                Thread.Sleep(1000);
+                mStream.Close(20);
+                mClient.Close();
+                GameManager.removePlayer(this);
+                //Thread.Sleep(1000);
+            }
         }
 
         private void netUpdate()
         {
             while (true)
             {
-                if(!mClient.Connected)
+                if (!mClient.Connected || !isConnected)
                 {
                     disconnect();
                     break;

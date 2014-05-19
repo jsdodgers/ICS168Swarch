@@ -77,6 +77,10 @@ namespace SwarchServer
                     newCommand.username = data[1];
                     newCommand.password = data[2];
                     break;
+                case CType.Disconnect:
+                    newCommand = new Command();
+                    newCommand.cType = CType.Disconnect;
+                    break;
                 default:
                     Console.WriteLine("Command receieved was invalid.");
                     newCommand = new Command();

@@ -146,29 +146,32 @@ namespace SwarchServer
 
             lock (playerList)
             {
-                lockedPlayerList = playerList;
+                lockedPlayerList = (ArrayList)playerList.Clone();
             }
 
             foreach (Player player in lockedPlayerList)
             {
                 //grab the readqueue then unlock the readqueue.
-
-                Queue<Command> prq;
+                
                 lock (player.readQueue)
                 {
-                    prq = player.readQueue;
-                }
+                    Queue<Command> prq = player.readQueue;
 
-                while (prq.Count != 0)
-                {
-                    Command cmd = prq.Dequeue();
-                    switch (cmd.cType)
+                    while (prq.Count != 0)
                     {
-                        case CType.Login:
-                            loginPlayer(player, cmd.username, cmd.password);
-                            break;
-                        default:
-                            break;
+                        Command cmd = prq.Dequeue();
+                        switch (cmd.cType)
+                        {
+                            case CType.Login:
+                                loginPlayer(player, cmd.username, cmd.password);
+                                break;
+                            case CType.Disconnect:
+                                player.disconnect();
+                                Console.WriteLine(player.playerName + " has disconnected.");
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
@@ -192,7 +195,7 @@ namespace SwarchServer
                     //db.dbPrintAll();
                     lrt |= LoginResponseType.SucceededLogin;
                     player.playerName = username;
-                    Console.WriteLine("Player has connected.");
+                    Console.WriteLine(player.playerName + " has connected.");
                     for (int i = 0; i < playerList.Count; i++)
                     {
                         ((Player)playerList[i]).sendCommand(Command.newPlayerCommand(0, username, player.playerNumber));
@@ -206,6 +209,14 @@ namespace SwarchServer
             }
 
             player.sendCommand(Command.loginCommand(0, lrt, gss));
+        }
+
+        public static void removePlayer(Player p)
+        {
+            lock (playerList)
+            {
+                playerList.Remove(p);
+            }
         }
 
         public static void stopServer()
