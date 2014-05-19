@@ -23,12 +23,11 @@ namespace SwarchServer
         public Queue<Command> writeQueue;
         public Queue<Command> readQueue;
 
-        public Player(TcpClient client, NetworkStream stream, int number, GameState gs)
+        public Player(TcpClient client, NetworkStream stream, int number)
         {
             playerNumber = number;
             mClient = client;
             mStream = stream;
-            mGameState = gs;
             writeQueue = new Queue<Command>();
             readQueue = new Queue<Command>();
             mThread = new Thread(new ThreadStart(netUpdate));

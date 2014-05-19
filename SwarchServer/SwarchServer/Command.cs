@@ -18,13 +18,23 @@ namespace SwarchServer
         private const char delimiter = ':';
         public LoginResponseType loginResponse;
 
-        public static Command loginCommand(long ts, LoginResponseType t)
+        public static Command loginCommand(long ts, LoginResponseType t, GameState[] gss)
         {
             Command newCommand = new Command();
             newCommand.timeStamp = ts;
             newCommand.cType = CType.Login;
             newCommand.loginResponse = t;
-            newCommand.message = newCommand.cType + ":" + t + ";";
+            newCommand.message = newCommand.cType + ":" + t;
+            newCommand.message += ":" + gss.Length;
+            if((newCommand.loginResponse & LoginResponseType.SucceededLogin) != 0)
+            {
+                foreach (GameState gs in gss)
+                {
+                    newCommand.message += ":" + gs.roomName + ":" + gs.numberOfPlayers();
+                }
+            }
+
+            newCommand.message += ";";
 
             return newCommand;
         }
