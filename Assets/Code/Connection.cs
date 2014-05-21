@@ -119,7 +119,7 @@ namespace Swarch {
 					case CType.StartGame:
 						if (Application.loadedLevel==1) {
 							gs = GameObject.Find("GameState").GetComponent<GameState>();
-							gs.startGame();
+							gs.startGame(comm.playerStartNum1,comm.playerStartX1,comm.playerStartY1,comm.playerStartNum2,comm.playerStartX2,comm.playerStartY2);
 						}
 						else {
 							addBack.Add(curr);
