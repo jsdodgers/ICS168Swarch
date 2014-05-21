@@ -33,8 +33,8 @@ namespace Swarch {
 		public void removePlayer(string playerName, int playerNum) {
 			foreach (Player p in players) {
 				if (p.name == playerName) {
-					Destroy(p.gameObject);
 					players.Remove(p);
+					Destroy(p.gameObject);
 				}
 			}
 		}
