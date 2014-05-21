@@ -90,7 +90,6 @@ namespace Swarch {
 		public void startGame(int player1, float x1, float y1, int d1, int player2, float x2, float y2, int d2,int[] pelletsId,float[] pelletsX, float[] pelletsY, float[] pelletsSize) {
 			gameStarted = true;
 			foreach (Player p in players) {
-				Debug.Log("Player " + p.name + ": " + p.id);
 				if (p.id == player1) {
 					p.transform.position = new Vector3(x1,y1,0);
 					p.setDirection(d1);

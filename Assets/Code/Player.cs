@@ -20,7 +20,6 @@ namespace Swarch {
 		void Start()
 		{
 			
-			Debug.Log("Start");
 			connection = GameObject.Find("Connection").GetComponent<Connection>();
 			resetCalled = false;
 			gameObject.name = "Player";

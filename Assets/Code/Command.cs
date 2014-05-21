@@ -120,7 +120,6 @@ namespace Swarch {
 				}
 				break;
 			case CType.StartGame:
-				Debug.Log("StartGame: " + message);
 				newCommand.cType = CType.StartGame;
 				newCommand.playerStartNum1 = Convert.ToInt32(data[1]);
 				newCommand.playerStartX1 = float.Parse(data[2]);
@@ -135,9 +134,7 @@ namespace Swarch {
 				newCommand.pelletsY = new float[num];
 				newCommand.pelletsSize = new float[num];
 				newCommand.pelletsId = new int[num];
-				Debug.Log("data.Length: " + data.Length + " num: " + num);
 				for (int n=9;n<data.Length;n+=4) {
-					Debug.Log("n: " + n);
 					newCommand.pelletsId[(n-9)/4] = int.Parse(data[n]);
 					newCommand.pelletsX[(n-9)/4] = float.Parse(data[n+1]);
 					newCommand.pelletsY[(n-9)/4] = float.Parse(data[n+2]);
@@ -159,7 +156,6 @@ namespace Swarch {
 				newCommand.roomNum = Convert.ToInt32(data[1]);
 				break;
 			case CType.LeaveGame:
-				Debug.Log("Leave game: " + newCommand.roomNum);
 				newCommand.cType = CType.LeaveGame;
 				newCommand.roomNum = Convert.ToInt32(data[1]);
 				break;
@@ -170,10 +166,8 @@ namespace Swarch {
 				newCommand.x = float.Parse(data[3]);
 				newCommand.y = float.Parse(data[4]);
 				newCommand.dir = int.Parse(data[5]);
-				Debug.Log("Received Player Position: " + message);
 				break;
 			case CType.EatPellet:
-				Debug.Log("EatPellet:     " + message);
 				newCommand.cType = CType.EatPellet;
 				newCommand.timeStamp = long.Parse(data[1]);
 				newCommand.playerId = int.Parse(data[2]);
@@ -205,7 +199,6 @@ namespace Swarch {
 				newCommand.dir = int.Parse(data[6]);
 				break;
 			default:
-				Console.WriteLine("Command receieved was invalid.");
 				break;
 			}
 			

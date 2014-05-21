@@ -64,7 +64,6 @@ namespace Swarch {
 				while (socks.recvBuffer.Count !=0) {
 					string curr = (string)socks.recvBuffer.Dequeue();
 					Command comm = Command.unwrap(curr);
-					Debug.Log(comm.cType);
 					GameState gs;
 					switch(comm.cType) {
 					case CType.Login:
@@ -88,7 +87,6 @@ namespace Swarch {
 						string playerName = comm.username;
 					//	Login loginScreen2 = GameObject.Find("Login").GetComponent<Login>();
 					//	loginScreen2.playerNames.Add(playerName);
-						Debug.Log(Application.loadedLevel);
 						if (Application.loadedLevel==1) {
 							gs = GameObject.Find("GameState").GetComponent<GameState>();
 							gs.addPlayer(playerName,comm.playerNumber);
@@ -132,7 +130,6 @@ namespace Swarch {
 						}
 						break;
 					case CType.EatPellet:
-						Debug.Log("EatPellet");
 						if (Application.loadedLevel==1) {
 							gs = GameObject.Find("GameState").GetComponent<GameState>();
 							gs.removePellet(comm.oldPelletId);

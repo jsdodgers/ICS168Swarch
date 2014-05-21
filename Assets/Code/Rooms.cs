@@ -29,7 +29,6 @@ namespace Swarch {
 				str+= " " + r.name;
 				str+= " " + r.numPlayers + "\n";
 			}
-			Debug.Log(str);
 			
 		}
 		public int count() {
