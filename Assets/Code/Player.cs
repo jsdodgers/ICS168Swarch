@@ -26,10 +26,10 @@ namespace Swarch {
 			globalVariables = (Global)GameObject.FindObjectOfType(typeof(Global));
 			maxSpeed = 4;
 			size = 1;
-			int dir = UnityEngine.Random.Range(1,5);
-			speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
-			speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
-			transform.position = new Vector3(UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f,UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f, 0.0f);
+		//	int dir = UnityEngine.Random.Range(1,5);
+		//	speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
+		//	speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
+		//	transform.position = new Vector3(UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f,UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f, 0.0f);
 		}
 		
 		// Update is called once per frame

@@ -19,6 +19,7 @@ namespace Swarch {
 
 		public void addPlayer(string playerName, int playerNum) {
 			GameObject go = (GameObject)Instantiate(playerPrefab);
+			go.renderer.enabled = false;
 			Player p = go.GetComponent<Player>();
 			players.Add(p);
 			p.name = playerName;
@@ -36,6 +37,9 @@ namespace Swarch {
 
 		public void startGame() {
 			gameStarted = true;
+			foreach (Player p in players) {
+				p.renderer.enabled = true;
+			}
 		}
 		
 		// Update is called once per frame
