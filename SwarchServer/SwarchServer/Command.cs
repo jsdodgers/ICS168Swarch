@@ -5,12 +5,12 @@ using System.Text;
 
 namespace SwarchServer
 {
-    public enum CType : byte {Login, StartGame, NewPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
+    public enum CType : byte {Login, StartGame, JoinGame, NewPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
     public enum LoginResponseType : int {FailedLogin = 0, SucceededLogin = 1 << 0, NewUser = 1 << 1}
 
     class Command
     {
-        public string message, username, password;
+        public string message, username, password, playerRoom;
         public CType cType;
         private long timeStamp;
         private int playerNumber;
@@ -76,6 +76,10 @@ namespace SwarchServer
                     newCommand.cType = CType.Login;
                     newCommand.username = data[1];
                     newCommand.password = data[2];
+                    break;
+                case CType.JoinGame:
+                    newCommand = new Command();
+                    newCommand.playerRoom = data[1];
                     break;
                 case CType.Disconnect:
                     newCommand = new Command();

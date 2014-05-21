@@ -36,7 +36,7 @@ namespace SwarchServer
             {
                 foreach(GameState gameState in gss)
                 {
-                    if (numberOfCurrentPlayers > 1)
+                    if (gameState.playerList.Count > 1)
                     {
                         startGame(gameState);
                     }
@@ -165,6 +165,9 @@ namespace SwarchServer
                             case CType.Login:
                                 loginPlayer(player, cmd.username, cmd.password);
                                 break;
+                            case CType.JoinGame:
+                                joinGame(cmd.playerRoom, player);
+                                break;
                             case CType.Disconnect:
                                 player.disconnect();
                                 Console.WriteLine(player.playerName + " has disconnected.");
@@ -209,6 +212,17 @@ namespace SwarchServer
             }
 
             player.sendCommand(Command.loginCommand(0, lrt, gss));
+        }
+
+        public static void joinGame(string roomName, Player player)
+        {
+            int i = 0;
+            while(gss[i].roomName != roomName || i < NUMBER_OF_GAMES)
+            {
+                i++;
+            }
+            gss[i].addPlayer(player);
+            playerList.Remove(player);
         }
 
         public static void removePlayer(Player p)

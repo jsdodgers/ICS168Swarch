@@ -28,7 +28,7 @@ namespace SwarchServer
             //db.dbConnect("users.sqlite");
         }
 
-        /*void Update()
+        void Update()
         {
             ArrayList lockedPlayerList;
 
@@ -41,60 +41,34 @@ namespace SwarchServer
             {
                 //grab the readqueue then unlock the readqueue.
 
-                Queue<Command> prq;
                 lock (player.readQueue)
                 {
-                    prq = player.readQueue;
-                }
+                    Queue<Command> prq = player.readQueue;
 
-                while (prq.Count != 0)
-                {
-                    Command cmd = prq.Dequeue();
-                    switch (cmd.cType)
+                    while (prq.Count != 0)
                     {
-                        case CType.Login:
-                            loginPlayer(player, cmd.username, cmd.password);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        public void loginPlayer(Player player, string username, string password)
-        {
-            LoginResponseType lrt = LoginResponseType.FailedLogin;
-            if(username != "" && password != "")
-            {
-                string realPassword = db.getPassword(username);
-                if(realPassword == null)
-                {
-                    realPassword = password;
-                    db.addUser(username, password);
-                    lrt = LoginResponseType.NewUser;
-                    Console.WriteLine("New user created.");
-                }
-                if(realPassword == password)
-                {
-                    //db.dbPrintAll();
-                    lrt |= LoginResponseType.SucceededLogin;
-                    player.playerName = username;
-                    Console.WriteLine("Player has connected.");
-                    for (int i = 0; i < playerList.Count; i++)
-                    {
-                        ((Player)playerList[i]).sendCommand(Command.newPlayerCommand(0, username, player.playerNumber));
-                        
-                        if(player != playerList[i])
+                        Command cmd = prq.Dequeue();
+                        switch (cmd.cType)
                         {
-                            player.sendCommand(Command.newPlayerCommand(0, ((Player)playerList[i]).playerName, ((Player)playerList[i]).playerNumber));
+                            case CType.PlayerPosition:
+                                break;
+                            case CType.SizeUpdate:
+                                break;
+                            case CType.EatPellet:
+                                break;
+                            case CType.SpawnPellet:
+                                break;
+                            case CType.EatPlayer:
+                                break;
+                            case CType.Death:
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
             }
-
-            player.sendCommand(Command.loginCommand(0, lrt));
-        }*/
+        }
 
         public void startGame()
         {
@@ -102,6 +76,11 @@ namespace SwarchServer
             {
                 player.sendCommand(Command.startGameCommand(0));
             }
+        }
+
+        public void playerPosition(float x, float y, int dir)
+        {
+
         }
 
         public void addPlayer(Player p)
