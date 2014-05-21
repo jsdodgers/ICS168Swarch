@@ -16,20 +16,13 @@ namespace Swarch {
 		public int error;
 		bool remember;
 		bool rememberPass;
-		bool loggingIn;
-		bool loggedIn;
-		bool connected;
 		bool newAccount;
 		string connectionString = "";
 		// Use this for initialization
 		void Start()
 		{
 			connection = GameObject.Find("Connection").GetComponent<Connection>();
-			connection.socks.SERVER_LOCATION = PlayerPrefs.GetString("IP");
 			error = 0;
-			loggingIn = false;
-			connected = false;
-			loggedIn = false;
 			newAccount = false;
 			remember = PlayerPrefs.GetInt("remember")==1;
 			if (remember) player1Name = PlayerPrefs.GetString("playerName");
@@ -48,10 +41,10 @@ namespace Swarch {
 			float width = Screen.width;
 			float height = Screen.height;
 			
-			if (!loggedIn) {
+			if (!connection.loggedIn) {
 				if (GUI.GetNameOfFocusedControl()=="password" || player1Password!="") {
 					if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return) {
-						if (player1Name!="" && !loggingIn) {
+						if (player1Name!="" && !connection.loggingIn) {
 							login();
 						}
 					}
@@ -90,7 +83,7 @@ namespace Swarch {
 				if (rememberPass)PlayerPrefs.SetString("playerPass",player1Password);
 				else PlayerPrefs.SetString("playerPass","");
 				PlayerPrefs.SetInt("rememberPass",(rememberPass?1:0));
-				GUI.enabled = !loggingIn;
+				GUI.enabled = !connection.loggingIn;
 				if(GUI.Button(new Rect(GetInputX(), GetLoginY(), 95, 20), "Login"))
 				{
 					login();
@@ -119,7 +112,8 @@ namespace Swarch {
 				for (int n=0;n<numRooms;n++) {
 					Room r = connection.rooms.get(n);
 					if (GUI.Button(new Rect(sidePerc * width,topBotPerc * height + (divPerc + buttonPerc) * n*height,(1-sidePerc*2)*width,buttonPerc*height),r.name + "      " + r.numPlayers + " Players")) {
-
+//						Command comm = Command.JoinGame(0,r.id);
+						connection.sendCommand(Command.JoinGame(0,r.id));
 					}
 				}
 				if (GUI.Button(new Rect(width - 140.0f,15.0f, 125.0f,30.0f),"Logout")) {
@@ -150,15 +144,15 @@ namespace Swarch {
 			Command comm = Command.Disconnect(0);
 			byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
 			connection.socks.SendTCPPacket(bytes);
-			loggedIn = false;
-			if (connected) {
-				if (connection.socks.Disconnect()) connected = false;
+			connection.loggedIn = false;
+			if (connection.connected) {
+				if (connection.socks.Disconnect()) connection.connected = false;
 			}
 		}
 
 		void login() {
-			if (!connected) {
-				loggingIn = true;
+			if (!connection.connected) {
+				connection.loggingIn = true;
 				connectionString = "Connecting...";
 				Thread t = new Thread(new ThreadStart(connectToServer));
 				t.Start();
@@ -169,13 +163,14 @@ namespace Swarch {
 		}
 		
 		public void succeededConnection() {
-			loggedIn = true;
-			loggingIn = false;
+			connection.loggedIn = true;
+			connection.loggingIn = false;
+			globalVariables.SetPlayerName(player1Name);
 			error = 0;
 		}
 		
 		public void failedConnection() {
-			loggingIn = false;
+			connection.loggingIn = false;
 			error = 1;
 		}
 		
@@ -184,9 +179,6 @@ namespace Swarch {
 		}
 		
 		void actualLogin() {
-			//			Command comm = Command.PaddleUpdate(gameProcess.getTimeStamp(),this);
-			//			byte[] bytes = Encoding.UTF8.GetBytes(comm.message + ";");
-			//			gameProcess.socks.SendTCPPacket(bytes);
 			if (player1Name!="" && player1Password!="") {
 				Command comm = Command.Login(0,player1Name,hashedPass());
 				byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
@@ -201,11 +193,11 @@ namespace Swarch {
 			if (connection.socks.Connect()) {
 				connectionString = "Connect Succeeded";
 				actualLogin();
-				connected = true;
+				connection.connected = true;
 			}
 			else {
 				connectionString = "Connect Failed";
-				loggingIn = false;
+				connection.loggingIn = false;
 			}
 		}
 		

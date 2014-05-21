@@ -8,13 +8,18 @@ namespace Swarch {
 		
 		public Sockets socks;
 		public Rooms rooms;
+		public int currentRoom;
 	//	public Sockets socks;
 
 		//	private byte byteBuffer;
 		//	private byte tempBuffer;
+
 		
-		public int player_num;
+		public bool loggingIn;
+		public bool loggedIn;
 		public bool connected;
+
+		public int player_num;
 		public bool gameStarted;
 		//	public Ball ball;
 		
@@ -25,6 +30,11 @@ namespace Swarch {
 
 		// Use this for initialization
 
+		public void sendCommand(Command comm) {
+			byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
+			socks.SendTCPPacket(bytes);
+		}
+			
 		void OnApplicationQuit() {
 			Command comm = Command.Disconnect(0);
 			byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
@@ -34,10 +44,14 @@ namespace Swarch {
 		void Start () {
 
 			DontDestroyOnLoad(gameObject);
+			loggingIn = false;
 			connected = false;
+			loggedIn = false;
+
 			gameStarted = false;
 			rooms = new Rooms();
 			socks = (Sockets)gameObject.AddComponent("Sockets");
+			socks.SERVER_LOCATION = PlayerPrefs.GetString("IP");
 		//	uniClock = new System.Diagnostics.Stopwatch();
 		//	dt = NTPTime.getNTPTime(ref uniClock);
 			
@@ -70,11 +84,27 @@ namespace Swarch {
 						break;
 					case CType.NewPlayer:
 						string playerName = comm.username;
-						Login loginScreen2 = GameObject.Find("Login").GetComponent<Login>();
-						loginScreen2.playerNames.Add(playerName);
+					//	Login loginScreen2 = GameObject.Find("Login").GetComponent<Login>();
+					//	loginScreen2.playerNames.Add(playerName);
+						GameState gs = GameObject.Find("GameState").GetComponent<GameState>();
+						gs.addPlayer(playerName,comm.playerNumber);
 						break;
-					case CType.StartGame:
+//					case CType.StartGame:
+//						Application.LoadLevel(1);
+//						break;
+					case CType.LeftPlayer:
+						string playerName1 = comm.username;
+						int playerNum1 = comm.playerNumber;
+						GameState gs1 = GameObject.Find("GameState").GetComponent<GameState>();
+						gs1.removePlayer(playerName1,playerNum1);
+						break;
+					case CType.JoinGame:
+						currentRoom = comm.roomNum;
 						Application.LoadLevel(1);
+						break;
+					case CType.LeaveGame:
+						currentRoom = -1;
+						Application.LoadLevel(0);
 						break;
 					default:
 						break;

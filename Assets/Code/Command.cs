@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum CType : byte {Login, StartGame, NewPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
+public enum CType : byte {Login, StartGame, NewPlayer,LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, JoinGame, LeaveGame}
 public enum LoginResponseType : int {
 	FailedLogin		= 0,
 	SucceededLogin	= 1 << 0,
@@ -15,11 +15,11 @@ namespace Swarch {
 		public string message, username, password;
 		public CType cType;
 		private long timeStamp;
-		private int playerNumber;
+		public int playerNumber;
 		public int[] scores;
 		private const char delimiter = ':';
 		public LoginResponseType loginResponse;
-		public int numRooms;
+		public int numRooms, roomNum;
 		public string[] roomNames;
 		public int[] roomNums;
 
@@ -27,7 +27,25 @@ namespace Swarch {
 			Command comm = new Command();
 			comm.timeStamp = timeStamp;
 			comm.cType = CType.Disconnect;
-			comm.message = comm.cType + ";";
+			comm.message = comm.cType + ":" + timeStamp + ";";
+			return comm;
+		}
+
+		public static Command JoinGame(long timestamp, int roomId) {
+			Command comm = new Command();
+			comm.timeStamp = timestamp;
+			comm.cType = CType.JoinGame;
+			comm.roomNum = roomId;
+			comm.message = comm.cType + ":" + timestamp + ":" + roomId + ";";
+			return comm;
+		}
+
+		public static Command LeaveGame(long timestamp, int roomid) {
+			Command comm = new Command();
+			comm.timeStamp = timestamp;
+			comm.cType = CType.LeaveGame;
+			comm.roomNum = roomid;
+			comm.message = comm.cType + ":" + timestamp + ":" + roomid + ";";
 			return comm;
 		}
 
@@ -63,11 +81,10 @@ namespace Swarch {
 		public static Command unwrap(string message)
 		{
 			string[] data = message.Split(new char[] {delimiter});
-			Command newCommand;
+			Command newCommand = new Command();
 			switch((CType)Enum.Parse(typeof(CType), data[0]))
 			{
 			case CType.Login:
-				newCommand = new Command();
 				newCommand.cType = CType.Login;
 				newCommand.loginResponse = (LoginResponseType)Enum.Parse(typeof(LoginResponseType),data[1]);
 				if ((newCommand.loginResponse&LoginResponseType.SucceededLogin)!=0) {
@@ -81,18 +98,28 @@ namespace Swarch {
 				}
 				break;
 			case CType.StartGame:
-				newCommand = new Command();
 				newCommand.cType = CType.StartGame;
 				break;
 			case CType.NewPlayer:
-				newCommand = new Command();
 				newCommand.cType = CType.NewPlayer;
 				newCommand.username = data[1];
 				newCommand.playerNumber = Convert.ToInt32(data[2]);
 				break;
+			case CType.LeftPlayer:
+				newCommand.cType = CType.LeftPlayer;
+				newCommand.username = data[1];
+				newCommand.playerNumber = Convert.ToInt32(data[2]);
+				break;
+			case CType.JoinGame:
+				newCommand.cType = CType.JoinGame;
+				newCommand.roomNum = Convert.ToInt32(data[1]);
+				break;
+			case CType.LeaveGame:
+				newCommand.cType = CType.LeaveGame;
+				newCommand.roomNum = Convert.ToInt32(data[1]);
+				break;
 			default:
 				Console.WriteLine("Command receieved was invalid.");
-				newCommand = new Command();
 				break;
 			}
 			

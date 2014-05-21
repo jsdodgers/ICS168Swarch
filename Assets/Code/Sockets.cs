@@ -44,7 +44,6 @@ public class Sockets : MonoBehaviour {
 		//********* COMPLETE THE FOLLOWING CODE
 		//********* ESTABLISH CONNECTION THEN MAKE THREAD TO READ BYTES FROM STREAM
 		try {
-			UnityEngine.Debug.Log("Connect!");
 			client = new TcpClient(SERVER_LOCATION,SERVER_PORT);
 			nws = client.GetStream();
 			t = new Thread(new ThreadStart(DoThread));

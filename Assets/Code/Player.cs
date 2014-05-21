@@ -3,124 +3,130 @@ using System.Collections;
 using System;
 
 namespace Swarch {
-public class Player : MonoBehaviour
-{
-	Global globalVariables;
-	public GameObject player;
-	float maxSpeed, speedX, speedY, size;
-	public KeyCode moveLeft, moveRight, moveUp, moveDown;
-	private KeyCode moveLeft2, moveRight2, moveUp2, moveDown2;
-	bool resetCalled;
-
-	// Use this for initialization
-	void Start()
+	public class Player : MonoBehaviour
 	{
-		resetCalled = false;
-		gameObject.name = "Player";
-		globalVariables = (Global)GameObject.FindObjectOfType(typeof(Global));
-		maxSpeed = 4;
-		size = 1;
-		int dir = UnityEngine.Random.Range(1,5);
-		speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
-		speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
-		transform.position = new Vector3(UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f,UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f, 0.0f);
-	}
-	
-	// Update is called once per frame
-	void Update()
-	{
-		PlayerMove();
-		PlayerScale();
-	}
-
-	float GetCurrentSpeed()
-	{
-		return maxSpeed/Mathf.Atan(size);
-	}
-
-	void PlayerMove()
-	{
-		PlayerMoveLeft();
-		PlayerMoveRight();
-		PlayerMoveUp();
-		PlayerMoveDown();
-
-		transform.Translate(Time.deltaTime*speedX, Time.deltaTime*speedY, 0.0f);
-	}
-
-	void PlayerMoveLeft()
-	{
-		if(Input.GetKeyDown(moveLeft) || Input.GetKeyDown(moveLeft2))
+		Global globalVariables;
+		public GameObject player;
+		float maxSpeed, speedX, speedY, size;
+		public string name;
+		public int id;
+		public KeyCode moveLeft, moveRight, moveUp, moveDown;
+		private KeyCode moveLeft2, moveRight2, moveUp2, moveDown2;
+		bool resetCalled;
+		public Connection connection;
+		
+		// Use this for initialization
+		void Start()
 		{
-			speedX = -GetCurrentSpeed();
-			speedY = 0;
+			
+			
+			connection = GameObject.Find("Connection").GetComponent<Connection>();
+			resetCalled = false;
+			gameObject.name = "Player";
+			globalVariables = (Global)GameObject.FindObjectOfType(typeof(Global));
+			maxSpeed = 4;
+			size = 1;
+			int dir = UnityEngine.Random.Range(1,5);
+			speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
+			speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
+			transform.position = new Vector3(UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f,UnityEngine.Random.Range(-30.0f, 30.0f)/10.0f, 0.0f);
 		}
-	}
-
-	void PlayerMoveRight()
-	{
-		if(Input.GetKeyDown(moveRight) || Input.GetKeyDown(moveRight2))
+		
+		// Update is called once per frame
+		void Update()
 		{
-			speedX = GetCurrentSpeed();
-			speedY = 0;
+			PlayerMove();
+			PlayerScale();
 		}
-	}
-
-	void PlayerMoveUp()
-	{
-		if(Input.GetKeyDown(moveUp) || Input.GetKeyDown(moveUp2))
+		
+		float GetCurrentSpeed()
 		{
-			speedX = 0;
-			speedY = GetCurrentSpeed();
+			return maxSpeed/Mathf.Atan(size);
 		}
-	}
-
-	void PlayerMoveDown()
-	{
-		if(Input.GetKeyDown(moveDown) || Input.GetKeyDown(moveDown2))
+		
+		void PlayerMove()
 		{
-			speedX = 0;
-			speedY = -GetCurrentSpeed();
+			PlayerMoveLeft();
+			PlayerMoveRight();
+			PlayerMoveUp();
+			PlayerMoveDown();
+			
+			transform.Translate(Time.deltaTime*speedX, Time.deltaTime*speedY, 0.0f);
 		}
-	}
-
-	void PlayerScale()
-	{
-		transform.localScale = new Vector3(Mathf.Sqrt(size), Mathf.Sqrt(size), transform.localScale.z);
-	}
-
-	void resetPlayer() {
-		if (!resetCalled) {
-			Instantiate(player);
-			Destroy(gameObject);
-			resetCalled = true;
-		}
-	}
-
-	void OnTriggerEnter2D(Collider2D coll)
-	{
-		if(coll.gameObject.name == "Pellet")
+		
+		void PlayerMoveLeft()
 		{
-			size += coll.gameObject.GetComponent<Pellet>().GetPelletSize();
-		}
-
-		if (coll.gameObject.name == "Player") {
-			Player otherPlayer = coll.gameObject.GetComponent<Player>();
-			if (size > otherPlayer.size) {
-				size += otherPlayer.size;
-				otherPlayer.resetPlayer();
+			if(Input.GetKeyDown(moveLeft) || Input.GetKeyDown(moveLeft2))
+			{
+				speedX = -GetCurrentSpeed();
+				speedY = 0;
 			}
-			else {
-				if (size==otherPlayer.size) {
+		}
+		
+		void PlayerMoveRight()
+		{
+			if(Input.GetKeyDown(moveRight) || Input.GetKeyDown(moveRight2))
+			{
+				speedX = GetCurrentSpeed();
+				speedY = 0;
+			}
+		}
+		
+		void PlayerMoveUp()
+		{
+			if(Input.GetKeyDown(moveUp) || Input.GetKeyDown(moveUp2))
+			{
+				speedX = 0;
+				speedY = GetCurrentSpeed();
+			}
+		}
+		
+		void PlayerMoveDown()
+		{
+			if(Input.GetKeyDown(moveDown) || Input.GetKeyDown(moveDown2))
+			{
+				speedX = 0;
+				speedY = -GetCurrentSpeed();
+			}
+		}
+		
+		void PlayerScale()
+		{
+			transform.localScale = new Vector3(Mathf.Sqrt(size), Mathf.Sqrt(size), transform.localScale.z);
+		}
+		
+		void resetPlayer() {
+			if (!resetCalled) {
+				Instantiate(player);
+				Destroy(gameObject);
+				resetCalled = true;
+			}
+		}
+		
+		void OnTriggerEnter2D(Collider2D coll)
+		{
+			if(coll.gameObject.name == "Pellet")
+			{
+				size += coll.gameObject.GetComponent<Pellet>().GetPelletSize();
+			}
+			
+			if (coll.gameObject.name == "Player") {
+				Player otherPlayer = coll.gameObject.GetComponent<Player>();
+				if (size > otherPlayer.size) {
+					size += otherPlayer.size;
 					otherPlayer.resetPlayer();
 				}
-				resetPlayer();
+				else {
+					if (size==otherPlayer.size) {
+						otherPlayer.resetPlayer();
+					}
+					resetPlayer();
+				}
 			}
-		}
-
-		if(coll.gameObject.name == "Wall")
-		{
-		/*	if (coll.transform.localScale.x == 1) {
+			
+			if(coll.gameObject.name == "Wall")
+			{
+				/*	if (coll.transform.localScale.x == 1) {
 				Debug.Log("WallX");
 				Vector3 vec = transform.position;
 				if (speedX>0 && vec.x>0 || speedX<0 && vec.x<0)
@@ -137,17 +143,26 @@ public class Player : MonoBehaviour
 				transform.position = vec;
 			}
 			*/
-			resetPlayer();
-
+				resetPlayer();
+				
+			}
+		}
+		
+		void OnGUI()
+		{
+			float width = Screen.width;
+			float height = Screen.height;
+			TextAnchor t = GUI.skin.label.alignment;
+			GUI.Label(new Rect(10, 10, 200, 20), globalVariables.GetPlayerName());
+			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+			if (connection.currentRoom>0) {
+				GUI.Label(new Rect(0,0,width,40),connection.rooms.get(connection.currentRoom).name);
+			}
+			GUI.skin.label.alignment = t;
+			if (GUI.Button(new Rect(Screen.width-120,10,110,25),"Leave Game")) {
+				connection.sendCommand(Command.LeaveGame(0,connection.currentRoom));
+				//			Application.LoadLevel(0);
+			}
 		}
 	}
-
-	void OnGUI()
-	{
-		GUI.Label(new Rect(10, 10, 200, 20), globalVariables.GetPlayerName());
-		if (GUI.Button(new Rect(Screen.width-70,10,60,25),"Logout")) {
-			Application.LoadLevel(0);
-		}
-	}
-}
 }
