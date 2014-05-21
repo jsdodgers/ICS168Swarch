@@ -31,6 +31,8 @@ namespace Swarch {
 		public float playerNewSize;
 		public int playerId, newPelletId, oldPelletId;
 		public float pelletX, pelletY, pelletSize;
+		public int eatenPlayerId,eatingPlayerId;
+		public float playerX,playerY,eatenPlayerSize,eatingPlayerSize;
 
 		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
 			Command comm = new Command();
@@ -171,6 +173,7 @@ namespace Swarch {
 				Debug.Log("Received Player Position: " + message);
 				break;
 			case CType.EatPellet:
+				Debug.Log("EatPellet:     " + message);
 				newCommand.cType = CType.EatPellet;
 				newCommand.timeStamp = long.Parse(data[1]);
 				newCommand.playerId = int.Parse(data[2]);
@@ -180,6 +183,26 @@ namespace Swarch {
 				newCommand.pelletX = float.Parse(data[6]);
 				newCommand.pelletY = float.Parse(data[7]);
 				newCommand.pelletSize = float.Parse(data[8]);
+				break;
+			case CType.EatPlayer:
+				newCommand.cType = CType.EatPlayer;
+				newCommand.timeStamp = long.Parse(data[1]);
+				newCommand.eatingPlayerId = int.Parse(data[2]);
+				newCommand.eatingPlayerSize = float.Parse(data[3]);
+				newCommand.eatenPlayerId = int.Parse(data[4]);
+				newCommand.eatenPlayerSize = float.Parse(data[5]);
+				newCommand.playerX = float.Parse(data[6]);
+				newCommand.playerY = float.Parse(data[7]);
+				newCommand.dir = int.Parse(data[8]);
+				break;
+			case CType.Death:
+				newCommand.cType = CType.Death;
+				newCommand.timeStamp = long.Parse(data[1]);
+				newCommand.playerId = int.Parse(data[2]);
+				newCommand.playerNewSize = float.Parse(data[3]);
+				newCommand.playerX = float.Parse(data[4]);
+				newCommand.playerY = float.Parse(data[5]);
+				newCommand.dir = int.Parse(data[6]);
 				break;
 			default:
 				Console.WriteLine("Command receieved was invalid.");

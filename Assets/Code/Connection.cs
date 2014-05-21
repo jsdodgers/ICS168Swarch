@@ -132,11 +132,27 @@ namespace Swarch {
 						}
 						break;
 					case CType.EatPellet:
+						Debug.Log("EatPellet");
 						if (Application.loadedLevel==1) {
 							gs = GameObject.Find("GameState").GetComponent<GameState>();
 							gs.removePellet(comm.oldPelletId);
 							gs.addPellet(comm.newPelletId,comm.pelletX,comm.pelletY,comm.pelletSize);
 							gs.setPlayerSize(comm.playerId, comm.playerNewSize);
+						}
+						break;
+					case CType.EatPlayer:
+						if (Application.loadedLevel==1) {
+							gs = GameObject.Find("GameState").GetComponent<GameState>();
+							gs.setPlayerSize(comm.eatingPlayerId, comm.eatingPlayerSize);
+							gs.setPlayerSize(comm.eatenPlayerId, comm.eatenPlayerSize);
+							gs.setPlayerPosition(comm.eatenPlayerId,comm.playerX,comm.playerY,comm.dir);
+						}
+						break;
+					case CType.Death:
+						if (Application.loadedLevel==1) {
+							gs = GameObject.Find("GameState").GetComponent<GameState>();
+							gs.setPlayerSize(comm.playerId, comm.playerNewSize);
+							gs.setPlayerPosition(comm.playerId,comm.playerX,comm.playerY,comm.dir);
 						}
 						break;
 					default:

@@ -48,7 +48,6 @@ namespace Swarch {
 		public void setDirection(int dir) {
 			speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
 			speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
-			Debug.Log("setDirection: " + dir + " X: " + speedX + " Y: " + speedY + " size: " + size);
 		}
 		
 		void PlayerMove()
@@ -63,7 +62,6 @@ namespace Swarch {
 		}
 
 		void postDirection(int dir) {
-			Debug.Log("postDirection(" + dir + ")");
 			connection.sendCommand(Command.PlayerPosition(0,transform.position.x,transform.position.y,dir));
 		}
 		
