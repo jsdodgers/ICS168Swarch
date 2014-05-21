@@ -26,6 +26,8 @@ namespace Swarch {
 		public int playerStartNum2;
 		public float playerStartX1, playerStartX2, playerStartY1, playerStartY2, x, y;
 		public int playerStartDir1,playerStartDir2, dir;
+		public float[] pelletsX, pelletsY, pelletsSize;
+		public int[] pelletsId;
 
 		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
 			Command comm = new Command();
@@ -122,6 +124,17 @@ namespace Swarch {
 				newCommand.playerStartX2 = float.Parse(data[6]);
 				newCommand.playerStartY2 = float.Parse(data[7]);
 				newCommand.playerStartDir2 = int.Parse(data[8]);
+				int num = (data.Length-8)/4;
+				newCommand.pelletsX = new float[num];
+				newCommand.pelletsY = new float[num];
+				newCommand.pelletsSize = new float[num];
+				newCommand.pelletsId = new int[num];
+				for (int n=9;n<data.Length;n+=4) {
+					newCommand.pelletsId[n-9] = int.Parse(data[n]);
+					newCommand.pelletsX[n-9] = float.Parse(data[n+1]);
+					newCommand.pelletsY[n-9] = float.Parse(data[n+2]);
+					newCommand.pelletsSize[n-9] = float.Parse(data[n+3]);
+				}
 				break;
 			case CType.NewPlayer:
 				newCommand.cType = CType.NewPlayer;

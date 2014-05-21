@@ -47,7 +47,7 @@ namespace Swarch {
 
 		public void removePlayer(string playerName, int playerNum) {
 			ArrayList players3 = new ArrayList();
-			foreach (Player p in players3) players3.Add(p);
+			foreach (Player p in players) players3.Add(p);
 			foreach (Player p in players3) {
 				if (p.name == playerName) {
 					players.Remove(p);
@@ -56,7 +56,30 @@ namespace Swarch {
 			}
 		}
 
-		public void startGame(int player1, float x1, float y1, int d1, int player2, float x2, float y2, int d2) {
+		public void addPellet(int pelletId, float x, float y, float size) {
+			GameObject go = (GameObject)Instantiate(pelletPrefab);
+			go.renderer.enabled = false;
+			Pellet p = go.GetComponent<Pellet>();
+			SpriteRenderer sp = p.GetComponent<SpriteRenderer>();
+			sp.color = Color.yellow;
+			pellets.Add(p);
+			p.id = pelletId;
+			p.setSize(size);
+			p.setPos(x,y);
+		}
+
+		public void removePellet(int pelletId) {
+			ArrayList pellets3 = new ArrayList();
+			foreach (Pellet p in pellets) pellets3.Add(p);
+			foreach (Pellet p in pellets3) {
+				if (p.id==pelletId) {
+					pellets.Remove(p);
+					Destroy(p.gameObject);
+				}
+			}
+		}
+
+		public void startGame(int player1, float x1, float y1, int d1, int player2, float x2, float y2, int d2,int[] pelletsId,float[] pelletsX, float[] pelletsY, float[] pelletsSize) {
 			gameStarted = true;
 			foreach (Player p in players) {
 				Debug.Log("Player " + p.name + ": " + p.id);
@@ -69,6 +92,9 @@ namespace Swarch {
 					p.setDirection(d2);
 				}
 				p.renderer.enabled = true;
+			}
+			for (int n=0;n<pelletsX.Length;n++) {
+				addPellet(pelletsId[n],pelletsX[n],pelletsY[n],pelletsSize[n]);
 			}
 		}
 		
