@@ -147,22 +147,6 @@ namespace Swarch {
 				
 			}
 		}
-		
-		void OnGUI()
-		{
-			float width = Screen.width;
-			float height = Screen.height;
-			TextAnchor t = GUI.skin.label.alignment;
-			GUI.Label(new Rect(10, 10, 200, 20), globalVariables.GetPlayerName());
-			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
-			if (connection.currentRoom>0) {
-				GUI.Label(new Rect(0,0,width,40),connection.rooms.get(connection.currentRoom).name);
-			}
-			GUI.skin.label.alignment = t;
-			if (GUI.Button(new Rect(Screen.width-120,10,110,25),"Leave Game")) {
-				connection.sendCommand(Command.LeaveGame(0,connection.currentRoom));
-				//			Application.LoadLevel(0);
-			}
-		}
+
 	}
 }

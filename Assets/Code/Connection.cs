@@ -65,6 +65,7 @@ namespace Swarch {
 					string curr = (string)socks.recvBuffer.Dequeue();
 					Command comm = Command.unwrap(curr);
 					Debug.Log(comm.cType);
+					GameState gs;
 					switch(comm.cType) {
 					case CType.Login:
 						LoginResponseType type = comm.loginResponse;
@@ -89,7 +90,7 @@ namespace Swarch {
 					//	loginScreen2.playerNames.Add(playerName);
 						Debug.Log(Application.loadedLevel);
 						if (Application.loadedLevel==1) {
-							GameState gs = GameObject.Find("GameState").GetComponent<GameState>();
+							gs = GameObject.Find("GameState").GetComponent<GameState>();
 							gs.addPlayer(playerName,comm.playerNumber);
 						}
 						else {
@@ -114,6 +115,10 @@ namespace Swarch {
 					case CType.LeaveGame:
 						currentRoom = -1;
 						Application.LoadLevel(0);
+						break;
+					case CType.StartGame:
+						gs = GameObject.Find("GameState").GetComponent<GameState>();
+						gs.startGame();
 						break;
 					default:
 						break;

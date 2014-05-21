@@ -115,6 +115,7 @@ namespace Swarch {
 				newCommand.roomNum = Convert.ToInt32(data[1]);
 				break;
 			case CType.LeaveGame:
+				Debug.Log("Leave game: " + newCommand.roomNum);
 				newCommand.cType = CType.LeaveGame;
 				newCommand.roomNum = Convert.ToInt32(data[1]);
 				break;
