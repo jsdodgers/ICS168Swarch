@@ -104,6 +104,10 @@ namespace Swarch {
 				addPellet(pelletsId[n],pelletsX[n],pelletsY[n],pelletsSize[n]);
 			}
 		}
+
+		public void startGame(int[] playerNums, float[] playerXs, float[] playerYs, float[] playerSizes, int[] playerDirs, int[] pelletsId,float[] pelletsX, float[] pelletsY, float[] pelletsSize) {
+
+		}
 		
 		// Update is called once per frame
 		void Update () {

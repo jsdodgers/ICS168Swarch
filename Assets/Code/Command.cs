@@ -26,13 +26,15 @@ namespace Swarch {
 		public int playerStartNum2;
 		public float playerStartX1, playerStartX2, playerStartY1, playerStartY2, x, y;
 		public int playerStartDir1,playerStartDir2, dir;
-		public float[] pelletsX, pelletsY, pelletsSize;
+		public int[] playerNums,playerDirs;
+		public float[] pelletsX, pelletsY, pelletsSize, playerXs,playerYs,playerSizes;
 		public int[] pelletsId;
 		public float playerNewSize;
 		public int playerId, newPelletId, oldPelletId;
 		public float pelletX, pelletY, pelletSize;
 		public int eatenPlayerId,eatingPlayerId;
 		public float playerX,playerY,eatenPlayerSize,eatingPlayerSize;
+		public int type;
 
 		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
 			Command comm = new Command();
@@ -121,24 +123,54 @@ namespace Swarch {
 				break;
 			case CType.StartGame:
 				newCommand.cType = CType.StartGame;
-				newCommand.playerStartNum1 = Convert.ToInt32(data[1]);
-				newCommand.playerStartX1 = float.Parse(data[2]);
-				newCommand.playerStartY1 = float.Parse(data[3]);
-				newCommand.playerStartDir1 = int.Parse(data[4]);
-				newCommand.playerStartNum2 = Convert.ToInt32(data[5]);
-				newCommand.playerStartX2 = float.Parse(data[6]);
-				newCommand.playerStartY2 = float.Parse(data[7]);
-				newCommand.playerStartDir2 = int.Parse(data[8]);
-				int num = (data.Length-9)/4;
-				newCommand.pelletsX = new float[num];
-				newCommand.pelletsY = new float[num];
-				newCommand.pelletsSize = new float[num];
-				newCommand.pelletsId = new int[num];
-				for (int n=9;n<data.Length;n+=4) {
-					newCommand.pelletsId[(n-9)/4] = int.Parse(data[n]);
-					newCommand.pelletsX[(n-9)/4] = float.Parse(data[n+1]);
-					newCommand.pelletsY[(n-9)/4] = float.Parse(data[n+2]);
-					newCommand.pelletsSize[(n-9)/4] = float.Parse(data[n+3]);
+				newCommand.type = int.Parse(data[1]);
+				if (newCommand.type==0) {
+					newCommand.playerStartNum1 = Convert.ToInt32(data[2]);
+					newCommand.playerStartX1 = float.Parse(data[3]);
+					newCommand.playerStartY1 = float.Parse(data[4]);
+					newCommand.playerStartDir1 = int.Parse(data[5]);
+					newCommand.playerStartNum2 = Convert.ToInt32(data[6]);
+					newCommand.playerStartX2 = float.Parse(data[7]);
+					newCommand.playerStartY2 = float.Parse(data[8]);
+					newCommand.playerStartDir2 = int.Parse(data[9]);
+					int num = (data.Length-10)/4;
+					newCommand.pelletsX = new float[num];
+					newCommand.pelletsY = new float[num];
+					newCommand.pelletsSize = new float[num];
+					newCommand.pelletsId = new int[num];
+					for (int n=10;n<data.Length;n+=4) {
+						newCommand.pelletsId[(n-10)/4] = int.Parse(data[n]);
+						newCommand.pelletsX[(n-10)/4] = float.Parse(data[n+1]);
+						newCommand.pelletsY[(n-10)/4] = float.Parse(data[n+2]);
+						newCommand.pelletsSize[(n-10)/4] = float.Parse(data[n+3]);
+					}
+				}
+				else if (newCommand.type==1) {
+					int numPlayers = int.Parse(data[2]);
+					newCommand.playerNums = new int[numPlayers];
+					newCommand.playerXs = new float[numPlayers];
+					newCommand.playerYs = new float[numPlayers];
+					newCommand.playerSizes = new float[numPlayers];
+					newCommand.playerDirs = new int[numPlayers];
+					int curr = 3;
+					for (int n=0;n<numPlayers;n++) {
+						newCommand.playerNums[n] = int.Parse(data[curr]);curr++;
+						newCommand.playerXs[n] = float.Parse(data[curr]);curr++;
+						newCommand.playerYs[n] = float.Parse(data[curr]);curr++;
+						newCommand.playerDirs[n] = int.Parse(data[curr]);curr++;
+						newCommand.playerSizes[n] = float.Parse(data[curr]);curr++;
+					}
+					int numPellets = int.Parse(data[curr]);
+					newCommand.pelletsX = new float[numPellets];
+					newCommand.pelletsY = new float[numPellets];
+					newCommand.pelletsSize = new float[numPellets];
+					newCommand.pelletsId = new int[numPellets];
+					for (int n=0;n<data.Length;n++) {
+						newCommand.pelletsId[n] = int.Parse(data[curr]);curr++;
+						newCommand.pelletsX[n] = float.Parse(data[curr]);curr++;
+						newCommand.pelletsY[n] = float.Parse(data[curr]);curr++;
+						newCommand.pelletsSize[n] = float.Parse(data[curr]);curr++;
+					}
 				}
 				break;
 			case CType.NewPlayer:
