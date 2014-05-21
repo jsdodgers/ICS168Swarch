@@ -128,6 +128,7 @@ namespace Swarch {
 					case CType.PlayerPosition:
 						if (Application.loadedLevel==1) {
 							gs = GameObject.Find("GameState").GetComponent<GameState>();
+							gs.setPlayerPosition(comm.playerNumber,comm.x,comm.y,comm.dir);
 						}
 						break;
 					default:
