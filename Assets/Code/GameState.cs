@@ -18,7 +18,7 @@ namespace Swarch {
 		}
 
 		public void addPlayer(string playerName, int playerNum) {
-			GameObject go = Instantiate(playerPrefab);
+			GameObject go = (GameObject)Instantiate(playerPrefab);
 			Player p = go.GetComponent<Player>();
 			players.Add(p);
 			p.name = playerName;
@@ -28,6 +28,7 @@ namespace Swarch {
 		public void removePlayer(string playerName, int playerNum) {
 			foreach (Player p in players) {
 				if (p.name == playerName) {
+					Destroy(p.gameObject);
 					players.Remove(p);
 				}
 			}
