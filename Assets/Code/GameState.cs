@@ -30,6 +30,14 @@ namespace Swarch {
 			}
 		}
 
+		public void setPlayerSize(int playerNum,float size) {
+			foreach (Player p in players) {
+				if (p.id==playerNum) {
+					p.setSize(size);
+				}
+			}
+		}
+
 		public void addPlayer(string playerName, int playerNum) {
 			GameObject go = (GameObject)Instantiate(playerPrefab);
 			go.renderer.enabled = false;
@@ -77,6 +85,7 @@ namespace Swarch {
 				}
 			}
 		}
+
 
 		public void startGame(int player1, float x1, float y1, int d1, int player2, float x2, float y2, int d2,int[] pelletsId,float[] pelletsX, float[] pelletsY, float[] pelletsSize) {
 			gameStarted = true;

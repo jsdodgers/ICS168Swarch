@@ -28,6 +28,9 @@ namespace Swarch {
 		public int playerStartDir1,playerStartDir2, dir;
 		public float[] pelletsX, pelletsY, pelletsSize;
 		public int[] pelletsId;
+		public float playerNewSize;
+		public int playerId, newPelletId, oldPelletId;
+		public float pelletX, pelletY, pelletSize;
 
 		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
 			Command comm = new Command();
@@ -166,6 +169,17 @@ namespace Swarch {
 				newCommand.y = float.Parse(data[4]);
 				newCommand.dir = int.Parse(data[5]);
 				Debug.Log("Received Player Position: " + message);
+				break;
+			case CType.EatPellet:
+				newCommand.cType = CType.EatPellet;
+				newCommand.timeStamp = long.Parse(data[1]);
+				newCommand.playerId = int.Parse(data[2]);
+				newCommand.playerNewSize = float.Parse(data[3]);
+				newCommand.oldPelletId = int.Parse(data[4]);
+				newCommand.newPelletId = int.Parse(data[5]);
+				newCommand.pelletX = float.Parse(data[6]);
+				newCommand.pelletY = float.Parse(data[7]);
+				newCommand.pelletSize = float.Parse(data[8]);
 				break;
 			default:
 				Console.WriteLine("Command receieved was invalid.");

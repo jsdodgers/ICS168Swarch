@@ -106,7 +106,12 @@ namespace Swarch {
 				postDirection(2);
 			}
 		}
-		
+
+		public void setSize(float size1) {
+			size = size1;
+			PlayerScale();
+		}
+
 		void PlayerScale()
 		{
 			transform.localScale = new Vector3(Mathf.Sqrt(size), Mathf.Sqrt(size), transform.localScale.z);
@@ -124,11 +129,11 @@ namespace Swarch {
 		{
 			if(coll.gameObject.name == "Pellet")
 			{
-				size += coll.gameObject.GetComponent<Pellet>().GetPelletSize();
+			//	size += coll.gameObject.GetComponent<Pellet>().GetPelletSize();
 			}
 			
 			if (coll.gameObject.name == "Player") {
-				Player otherPlayer = coll.gameObject.GetComponent<Player>();
+		/*		Player otherPlayer = coll.gameObject.GetComponent<Player>();
 				if (size > otherPlayer.size) {
 					size += otherPlayer.size;
 					otherPlayer.resetPlayer();
@@ -138,7 +143,7 @@ namespace Swarch {
 						otherPlayer.resetPlayer();
 					}
 					resetPlayer();
-				}
+				}*/
 			}
 			
 			if(coll.gameObject.name == "Wall")
