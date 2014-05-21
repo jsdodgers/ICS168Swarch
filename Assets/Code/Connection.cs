@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Text;
 
 namespace Swarch {
 	public class Connection : MonoBehaviour {
 		
 		public Sockets socks;
+		public Rooms rooms;
 	//	public Sockets socks;
 
 		//	private byte byteBuffer;
@@ -22,9 +24,19 @@ namespace Swarch {
 	//	System.Diagnostics.Stopwatch uniClock;
 
 		// Use this for initialization
+
+		void OnApplicationQuit() {
+			Command comm = Command.Disconnect(0);
+			byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
+			socks.SendTCPPacket(bytes);
+		}
+
 		void Start () {
+
+			DontDestroyOnLoad(gameObject);
 			connected = false;
 			gameStarted = false;
+			rooms = new Rooms();
 			socks = (Sockets)gameObject.AddComponent("Sockets");
 		//	uniClock = new System.Diagnostics.Stopwatch();
 		//	dt = NTPTime.getNTPTime(ref uniClock);
@@ -47,6 +59,10 @@ namespace Swarch {
 						}
 						if (!((type & LoginResponseType.SucceededLogin)==LoginResponseType.FailedLogin)) {
 							loginScreen.succeededConnection();
+							for (int n=0;n<comm.numRooms;n++) {
+								rooms.addRoom(comm.roomNames[n],comm.roomNums[n],n);
+							}
+						//	rooms.printRoomsToConsole();
 						}
 						if (type==LoginResponseType.FailedLogin) {
 							loginScreen.failedConnection();

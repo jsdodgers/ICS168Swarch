@@ -19,6 +19,17 @@ namespace Swarch {
 		public int[] scores;
 		private const char delimiter = ':';
 		public LoginResponseType loginResponse;
+		public int numRooms;
+		public string[] roomNames;
+		public int[] roomNums;
+
+		public static Command Disconnect(long timeStamp) {
+			Command comm = new Command();
+			comm.timeStamp = timeStamp;
+			comm.cType = CType.Disconnect;
+			comm.message = comm.cType + ";";
+			return comm;
+		}
 
 		public static Command Login(long timeStamp, string username, string password)
 		{
@@ -59,6 +70,15 @@ namespace Swarch {
 				newCommand = new Command();
 				newCommand.cType = CType.Login;
 				newCommand.loginResponse = (LoginResponseType)Enum.Parse(typeof(LoginResponseType),data[1]);
+				if ((newCommand.loginResponse&LoginResponseType.SucceededLogin)!=0) {
+					newCommand.numRooms = Convert.ToInt32(data[2]);
+					newCommand.roomNames = new string[newCommand.numRooms];
+					newCommand.roomNums = new int[newCommand.numRooms];
+					for (int n=0;n<newCommand.numRooms;n++) {
+						newCommand.roomNames[n] = data[3+n*2];
+						newCommand.roomNums[n] = Convert.ToInt32(data[4+n*2]);
+					}
+				}
 				break;
 			case CType.StartGame:
 				newCommand = new Command();
