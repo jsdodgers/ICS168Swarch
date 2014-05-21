@@ -58,7 +58,6 @@ namespace Swarch {
 
 		public void addPellet(int pelletId, float x, float y, float size) {
 			GameObject go = (GameObject)Instantiate(pelletPrefab);
-			go.renderer.enabled = false;
 			Pellet p = go.GetComponent<Pellet>();
 			SpriteRenderer sp = p.GetComponent<SpriteRenderer>();
 			sp.color = Color.yellow;

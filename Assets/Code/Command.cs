@@ -115,6 +115,7 @@ namespace Swarch {
 				}
 				break;
 			case CType.StartGame:
+				Debug.Log("StartGame: " + message);
 				newCommand.cType = CType.StartGame;
 				newCommand.playerStartNum1 = Convert.ToInt32(data[1]);
 				newCommand.playerStartX1 = float.Parse(data[2]);
@@ -124,16 +125,18 @@ namespace Swarch {
 				newCommand.playerStartX2 = float.Parse(data[6]);
 				newCommand.playerStartY2 = float.Parse(data[7]);
 				newCommand.playerStartDir2 = int.Parse(data[8]);
-				int num = (data.Length-8)/4;
+				int num = (data.Length-9)/4;
 				newCommand.pelletsX = new float[num];
 				newCommand.pelletsY = new float[num];
 				newCommand.pelletsSize = new float[num];
 				newCommand.pelletsId = new int[num];
+				Debug.Log("data.Length: " + data.Length + " num: " + num);
 				for (int n=9;n<data.Length;n+=4) {
-					newCommand.pelletsId[n-9] = int.Parse(data[n]);
-					newCommand.pelletsX[n-9] = float.Parse(data[n+1]);
-					newCommand.pelletsY[n-9] = float.Parse(data[n+2]);
-					newCommand.pelletsSize[n-9] = float.Parse(data[n+3]);
+					Debug.Log("n: " + n);
+					newCommand.pelletsId[(n-9)/4] = int.Parse(data[n]);
+					newCommand.pelletsX[(n-9)/4] = float.Parse(data[n+1]);
+					newCommand.pelletsY[(n-9)/4] = float.Parse(data[n+2]);
+					newCommand.pelletsSize[(n-9)/4] = float.Parse(data[n+3]);
 				}
 				break;
 			case CType.NewPlayer:
