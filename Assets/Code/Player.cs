@@ -7,6 +7,7 @@ namespace Swarch {
 	{
 		Global globalVariables;
 		public GameObject player;
+		public bool isSelf = false;
 		float maxSpeed = 4, speedX, speedY, size = 1;
 		public string name;
 		public int id;
@@ -52,11 +53,12 @@ namespace Swarch {
 		
 		void PlayerMove()
 		{
-			PlayerMoveLeft();
-			PlayerMoveRight();
-			PlayerMoveUp();
-			PlayerMoveDown();
-			
+			if (isSelf) {
+				PlayerMoveLeft();
+				PlayerMoveRight();
+				PlayerMoveUp();
+				PlayerMoveDown();
+			}
 			transform.Translate(Time.deltaTime*speedX, Time.deltaTime*speedY, 0.0f);
 		}
 		

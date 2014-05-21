@@ -28,6 +28,7 @@ namespace Swarch {
 			players.Add(p);
 			p.name = playerName;
 			p.id = playerNum;
+			p.isSelf = (playerName==globalVariables.GetPlayerName());
 		}
 
 		public void removePlayer(string playerName, int playerNum) {
