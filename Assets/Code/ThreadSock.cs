@@ -36,7 +36,6 @@ public class ThreadSock : MonoBehaviour {
 					StringBuilder str = new StringBuilder();
 					str.Append(Encoding.UTF8.GetString(data,0,bytes));
 					string stri = str.ToString();
-						Debug.Log("Received: " + stri);
 					string[] s = stri.Split(new char[]{';'});
 					for (int n=0;n<s.Length-1;n++) {
 						socks.recvBuffer.Enqueue(s[n]);
