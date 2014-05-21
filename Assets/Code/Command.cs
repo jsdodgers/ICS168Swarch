@@ -24,10 +24,8 @@ namespace Swarch {
 		public int[] roomNums;
 		public int playerStartNum1;
 		public int playerStartNum2;
-		public float playerStartX1;
-		public float playerStartX2;
-		public float playerStartY1;
-		public float playerStartY2;
+		public float playerStartX1, playerStartX2, playerStartY1, playerStartY2;
+		public int playerStartDir1,playerStartDir2;
 
 		public static Command Disconnect(long timeStamp) {
 			Command comm = new Command();
@@ -108,9 +106,11 @@ namespace Swarch {
 				newCommand.playerStartNum1 = Convert.ToInt32(data[1]);
 				newCommand.playerStartX1 = float.Parse(data[2]);
 				newCommand.playerStartY1 = float.Parse(data[3]);
-				newCommand.playerStartNum2 = Convert.ToInt32(data[4]);
-				newCommand.playerStartX2 = float.Parse(data[5]);
-				newCommand.playerStartY2 = float.Parse(data[6]);
+				newCommand.playerStartDir1 = int.Parse(data[4]);
+				newCommand.playerStartNum2 = Convert.ToInt32(data[5]);
+				newCommand.playerStartX2 = float.Parse(data[6]);
+				newCommand.playerStartY2 = float.Parse(data[7]);
+				newCommand.playerStartDir2 = int.Parse(data[8]);
 				break;
 			case CType.NewPlayer:
 				newCommand.cType = CType.NewPlayer;

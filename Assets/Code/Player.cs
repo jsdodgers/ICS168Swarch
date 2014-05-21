@@ -43,6 +43,11 @@ namespace Swarch {
 		{
 			return maxSpeed/Mathf.Atan(size);
 		}
+
+		public void setDirection(int dir) {
+			speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
+			speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
+		}
 		
 		void PlayerMove()
 		{
@@ -97,8 +102,8 @@ namespace Swarch {
 		
 		void resetPlayer() {
 			if (!resetCalled) {
-				Instantiate(player);
-				Destroy(gameObject);
+			//	Instantiate(player);
+			//	Destroy(gameObject);
 				resetCalled = true;
 			}
 		}
