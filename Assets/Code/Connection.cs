@@ -120,6 +120,9 @@ namespace Swarch {
 							if (comm.type==0) {
 								gs.startGame(comm.playerStartNum1,comm.playerStartX1,comm.playerStartY1,comm.playerStartDir1,comm.playerStartNum2,comm.playerStartX2,comm.playerStartY2,comm.playerStartDir2,comm.pelletsId,comm.pelletsX,comm.pelletsY,comm.pelletsSize);
 							}
+							else if (comm.type==1) {
+								gs.startGame(comm.playerNums,comm.playerXs,comm.playerYs,comm.playerSizes,comm.playerDirs,comm.pelletsId,comm.pelletsX,comm.pelletsY,comm.pelletsSize);
+							}
 						}
 						else {
 							addBack.Add(curr);

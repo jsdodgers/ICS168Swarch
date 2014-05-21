@@ -106,6 +106,20 @@ namespace Swarch {
 		}
 
 		public void startGame(int[] playerNums, float[] playerXs, float[] playerYs, float[] playerSizes, int[] playerDirs, int[] pelletsId,float[] pelletsX, float[] pelletsY, float[] pelletsSize) {
+			gameStarted = true;
+			for (int n=0;n<playerNums.Length;n++) {
+				foreach (Player p in players) {
+					if (p.id==playerNums[n]) {
+						p.transform.position = new Vector3(playerXs[n],playerYs[n],0);
+						p.setSize(playerSizes[n]);
+						p.setDirection(playerDirs[n]);
+						p.renderer.enabled = true;
+					}
+				}
+			}
+			for (int n=0;n<pelletsX.Length;n++) {
+				addPellet(pelletsId[n],pelletsX[n],pelletsY[n],pelletsSize[n]);
+			}
 
 		}
 		
