@@ -60,6 +60,7 @@ namespace Swarch {
 		// Update is called once per frame
 		void Update () {
 			lock(socks.recvBuffer) {
+				ArrayList addBack = new ArrayList();
 				while (socks.recvBuffer.Count !=0) {
 					string curr = (string)socks.recvBuffer.Dequeue();
 					Command comm = Command.unwrap(curr);
@@ -86,17 +87,25 @@ namespace Swarch {
 						string playerName = comm.username;
 					//	Login loginScreen2 = GameObject.Find("Login").GetComponent<Login>();
 					//	loginScreen2.playerNames.Add(playerName);
-						GameState gs = GameObject.Find("GameState").GetComponent<GameState>();
-						gs.addPlayer(playerName,comm.playerNumber);
+						Debug.Log(Application.loadedLevel);
+						if (Application.loadedLevel==1) {
+							GameState gs = GameObject.Find("GameState").GetComponent<GameState>();
+							gs.addPlayer(playerName,comm.playerNumber);
+						}
+						else {
+							addBack.Add(curr);
+						}
 						break;
 //					case CType.StartGame:
 //						Application.LoadLevel(1);
 //						break;
 					case CType.LeftPlayer:
-						string playerName1 = comm.username;
-						int playerNum1 = comm.playerNumber;
-						GameState gs1 = GameObject.Find("GameState").GetComponent<GameState>();
-						gs1.removePlayer(playerName1,playerNum1);
+						if (Application.loadedLevel==1) {
+							string playerName1 = comm.username;
+							int playerNum1 = comm.playerNumber;
+							GameState gs1 = GameObject.Find("GameState").GetComponent<GameState>();
+							gs1.removePlayer(playerName1,playerNum1);
+						}
 						break;
 					case CType.JoinGame:
 						currentRoom = comm.roomNum;
@@ -109,36 +118,9 @@ namespace Swarch {
 					default:
 						break;
 					}
-					/*
-				string curr = (string)socks.recvBuffer.Dequeue();
-				Command comm = Command.unwrap(curr);
-				Debug.Log("Command type: " + comm.commandType);
-				switch (comm.commandType) {
-					case CommandType.Initialize:
-						player_num = comm.playerNumber;
-						connected = true;
-						break;
-					case CommandType.StartGame:
-						gameStarted = true;
-						break;
-					case CommandType.PaddleUpdate:
-						Debug.Log("Paddle Pos1:  " + comm.paddlePosition);
-						setOtherPaddlePos(comm.paddlePosition);
-						break;
-					case CommandType.BallVelocity:
-						ball.velocity = new Vector2(comm.ballVelocityX,comm.ballVelocityY);
-						break;
-					case CommandType.BallPosition:
-						ball.transform.position = new Vector3(comm.ballPositionX,comm.ballPositionY,ball.transform.position.z);
-						break;
-					case CommandType.ScoreUpdate:
-						gui.player1Score = (int)comm.scores[0];
-						gui.player2Score = (int)comm.scores[1];
-						break;
-					default:
-						break;
-					
-				}*/
+				}
+				foreach (string str in addBack) {
+					socks.recvBuffer.Enqueue(str);
 				}
 			}
 		}
