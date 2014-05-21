@@ -122,6 +122,7 @@ namespace Swarch {
 				}
 				break;
 			case CType.StartGame:
+				Debug.Log("StartGame: " + message);
 				newCommand.cType = CType.StartGame;
 				newCommand.type = int.Parse(data[1]);
 				if (newCommand.type==0) {
@@ -161,11 +162,13 @@ namespace Swarch {
 						newCommand.playerSizes[n] = float.Parse(data[curr]);curr++;
 					}
 					int numPellets = int.Parse(data[curr]);
+					curr++;
 					newCommand.pelletsX = new float[numPellets];
 					newCommand.pelletsY = new float[numPellets];
 					newCommand.pelletsSize = new float[numPellets];
 					newCommand.pelletsId = new int[numPellets];
 					for (int n=0;n<data.Length;n++) {
+						Debug.Log(data[curr] + " " + data[curr+1] + " " + data[curr+2] + " " + data[curr+3]);
 						newCommand.pelletsId[n] = int.Parse(data[curr]);curr++;
 						newCommand.pelletsX[n] = float.Parse(data[curr]);curr++;
 						newCommand.pelletsY[n] = float.Parse(data[curr]);curr++;
