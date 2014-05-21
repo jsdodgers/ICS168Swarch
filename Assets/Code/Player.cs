@@ -12,7 +12,7 @@ namespace Swarch {
 		public string name;
 		public int id;
 		public KeyCode moveLeft, moveRight, moveUp, moveDown;
-		private KeyCode moveLeft2, moveRight2, moveUp2, moveDown2;
+		public KeyCode moveLeft2, moveRight2, moveUp2, moveDown2;
 		bool resetCalled;
 		public Connection connection;
 		
