@@ -36,9 +36,13 @@ namespace SwarchServer
             {
                 foreach(GameState gameState in gss)
                 {
-                    if (gameState.playerList.Count > 1 && !gameStarted)
+                    if (gameState.playerList.Count > 1 && !gameState.gameStarted)
                     {
                         startGame(gameState);
+                    }
+                    if(gameState.playerList.Count < 1)
+                    {
+                        gameState.gameStarted = false;
                     }
                 }
             }
@@ -96,7 +100,7 @@ namespace SwarchServer
         {
             gameStarted = true;
             gs.startGame();
-            Console.WriteLine("A game has started.  Good luck and have fun!");
+            Console.WriteLine("A game has started in " + gs.roomName + ".  Good luck and have fun!");
         }
 
         public class PlayerListener
@@ -129,8 +133,9 @@ namespace SwarchServer
             //gs.addPlayer(new Player(client, stream, gs.numberOfPlayers(), gs));
             lock (playerList)
             {
-                playerList.Add(new Player(client, stream, playerList.Count));
+                playerList.Add(new Player(client, stream, numberOfCurrentPlayers));
             }
+            numberOfCurrentPlayers += 1;
         }
 
         private static void help()
@@ -214,9 +219,9 @@ namespace SwarchServer
 
         public static void joinGame(int roomName, Player player)
         {
+            player.sendCommand(Command.joinGameCommand(0, roomName));
             gss[roomName].addPlayer(player);
             player.gs = gss[roomName];
-            player.sendCommand(Command.joinGameCommand(0, roomName));
             Console.WriteLine(player.playerName + " has joined " + gss[roomName].roomName + ".");
         }
 

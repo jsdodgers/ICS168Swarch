@@ -12,6 +12,7 @@ namespace SwarchServer
     {
         public string message, username, password;
         public float x, y;
+        public int dir;
         public int playerRoom;
         public CType cType;
         private long timeStamp;
@@ -41,12 +42,18 @@ namespace SwarchServer
             return newCommand;
         }
 
-        public static Command startGameCommand(long ts)
+        public static Command startGameCommand(long ts, Player p1, Player p2, float x1, float y1, float x2, float y2, int d1, int d2, Pellet[] pelletList)
         {
             Command newCommand = new Command();
             newCommand.timeStamp = ts;
             newCommand.cType = CType.StartGame;
-            newCommand.message = newCommand.cType + ";";
+            newCommand.message = newCommand.cType + ":" + p1.playerNumber + ":" + x1 + ":" + y1 + ":" + d1 + ":" + p2.playerNumber + ":" + x2 + ":" + y2 + ":" + d2;
+            for (int i = 0; i < pelletList.Length; ++i)
+            {
+                newCommand.message += ":" + pelletList[i].id + ":" + pelletList[i].x + ":" + pelletList[i].y + ":" + pelletList[i].size;
+            }
+
+            newCommand.message += ";";
 
             return newCommand;
         }
@@ -93,14 +100,54 @@ namespace SwarchServer
             return newCommand;
         }
 
+        public static Command playerPositionCommand(long ts, Player p1, float x1, float y1, int d1)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.PlayerPosition;
+            newCommand.message = newCommand.cType + ":" + ts + ":" + p1.playerNumber + ":" + x1 + ":" + y1 + ":" + d1 + ";";
+
+            return newCommand;
+        }
+
+        public static Command eatPelletCommand(long ts, Player p1, int oldPelletID, Pellet newPellet)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.EatPellet;
+            newCommand.message = newCommand.cType + ":" + ts + ":" + p1.playerNumber + ":" + p1.size + ":" + oldPelletID + ":" + newPellet.id + ":" + newPellet.x + ":" + newPellet.y + ":" + newPellet.size + ";";
+
+            return newCommand;
+        }
+
+        public static Command eatPlayerCommand(long ts, Player p1, Player p2)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.EatPlayer;
+            newCommand.message = newCommand.cType + ":" + ts + ":" + p1.playerNumber + ":" + p1.size + ":" + p2.playerNumber + ":" + p2.size + ":" + p2.x + ":" + p2.y + ":" + p2.dir + ";";
+
+            return newCommand;
+        }
+
+        public static Command deathCommand(long ts, Player p1)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.Death;
+            newCommand.message = newCommand.cType + ":" + ts + ":" + p1.playerNumber + ":" + p1.size + ":" + p1.x + ":" + p1.y + ":" + p1.dir + ";";
+
+            return newCommand;
+        }
+
         public static Command unwrap(string message)
         {
             //Console.WriteLine(message);
             string[] data = message.Split(new char[] {delimiter});
-            /*foreach(string str in data)
+            foreach(string str in data)
             {
                 Console.WriteLine(str);
-            }*/
+            }
             Command newCommand = new Command();
             switch((CType)Enum.Parse(typeof(CType), data[0]))
             {
@@ -116,13 +163,15 @@ namespace SwarchServer
                     break;
                 case CType.LeaveGame:
                     newCommand.cType = CType.LeaveGame;
-                    newCommand.timeStamp = Convert.ToInt32(data[1]);
+                    newCommand.timeStamp = long.Parse(data[1]);
                     newCommand.playerRoom = Convert.ToInt32(data[2]);
                     break;
                 case CType.PlayerPosition:
                     newCommand.cType = CType.PlayerPosition;
-                    newCommand.timeStamp = Convert.ToInt32(data[1]);
-                    newCommand.timeStamp = Convert.ToInt32(data[1]);
+                    newCommand.timeStamp = long.Parse(data[1]);
+                    newCommand.x = float.Parse(data[2]);
+                    newCommand.y = float.Parse(data[3]);
+                    newCommand.dir = int.Parse(data[4]);
                     break;
                 case CType.Disconnect:
                     newCommand.cType = CType.Disconnect;
