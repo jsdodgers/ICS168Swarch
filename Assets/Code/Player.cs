@@ -7,7 +7,7 @@ namespace Swarch {
 	{
 		Global globalVariables;
 		public GameObject player;
-		float maxSpeed, speedX, speedY, size;
+		float maxSpeed = 4, speedX, speedY, size = 1;
 		public string name;
 		public int id;
 		public KeyCode moveLeft, moveRight, moveUp, moveDown;
@@ -19,13 +19,13 @@ namespace Swarch {
 		void Start()
 		{
 			
-			
+			Debug.Log("Start");
 			connection = GameObject.Find("Connection").GetComponent<Connection>();
 			resetCalled = false;
 			gameObject.name = "Player";
 			globalVariables = (Global)GameObject.FindObjectOfType(typeof(Global));
-			maxSpeed = 4;
-			size = 1;
+		//	maxSpeed = 4;
+		//	size = 1;
 		//	int dir = UnityEngine.Random.Range(1,5);
 		//	speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
 		//	speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
@@ -47,6 +47,7 @@ namespace Swarch {
 		public void setDirection(int dir) {
 			speedX = (dir%2==1?GetCurrentSpeed()*(dir-2):0);
 			speedY = (dir%2==1?0:GetCurrentSpeed()*(dir-3));
+			Debug.Log("setDirection: " + dir + " X: " + speedX + " Y: " + speedY + " size: " + size);
 		}
 		
 		void PlayerMove()

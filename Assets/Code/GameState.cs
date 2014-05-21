@@ -31,7 +31,9 @@ namespace Swarch {
 		}
 
 		public void removePlayer(string playerName, int playerNum) {
-			foreach (Player p in players) {
+			ArrayList players3 = new ArrayList();
+			foreach (Player p in players3) players3.Add(p);
+			foreach (Player p in players3) {
 				if (p.name == playerName) {
 					players.Remove(p);
 					Destroy(p.gameObject);
@@ -42,6 +44,7 @@ namespace Swarch {
 		public void startGame(int player1, float x1, float y1, int d1, int player2, float x2, float y2, int d2) {
 			gameStarted = true;
 			foreach (Player p in players) {
+				Debug.Log("Player " + p.name + ": " + p.id);
 				if (p.id == player1) {
 					p.transform.position = new Vector3(x1,y1,0);
 					p.setDirection(d1);
