@@ -63,6 +63,7 @@ namespace Swarch {
 		}
 
 		void postDirection(int dir) {
+			Debug.Log("postDirection(" + dir + ")");
 			connection.sendCommand(Command.PlayerPosition(0,transform.position.x,transform.position.y,dir));
 		}
 		
@@ -92,7 +93,7 @@ namespace Swarch {
 			{
 				speedX = 0;
 				speedY = GetCurrentSpeed();
-				postDirection(2);
+				postDirection(4);
 			}
 		}
 		
@@ -102,7 +103,7 @@ namespace Swarch {
 			{
 				speedX = 0;
 				speedY = -GetCurrentSpeed();
-				postDirection(4);
+				postDirection(2);
 			}
 		}
 		

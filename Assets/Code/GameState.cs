@@ -34,6 +34,11 @@ namespace Swarch {
 			GameObject go = (GameObject)Instantiate(playerPrefab);
 			go.renderer.enabled = false;
 			Player p = go.GetComponent<Player>();
+			SpriteRenderer sp = p.GetComponent<SpriteRenderer>();
+			if (players.Count==0) sp.color = Color.blue;
+			else if (players.Count==1) sp.color = Color.red;
+			else if (players.Count==2) sp.color = Color.green;
+			else if (players.Count==3) sp.color = Color.yellow;
 			players.Add(p);
 			p.name = playerName;
 			p.id = playerNum;

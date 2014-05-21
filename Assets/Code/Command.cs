@@ -149,6 +149,7 @@ namespace Swarch {
 				newCommand.x = float.Parse(data[3]);
 				newCommand.y = float.Parse(data[4]);
 				newCommand.dir = int.Parse(data[5]);
+				Debug.Log("Received Player Position: " + message);
 				break;
 			default:
 				Console.WriteLine("Command receieved was invalid.");
