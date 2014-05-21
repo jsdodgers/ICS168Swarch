@@ -40,6 +40,7 @@ namespace Swarch {
 		}
 
 		public void startGame() {
+			Debug.Log("StartGame();");
 			gameStarted = true;
 			foreach (Player p in players) {
 				p.renderer.enabled = true;

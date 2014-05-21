@@ -117,8 +117,13 @@ namespace Swarch {
 						Application.LoadLevel(0);
 						break;
 					case CType.StartGame:
-						gs = GameObject.Find("GameState").GetComponent<GameState>();
-						gs.startGame();
+						if (Application.loadedLevel==1) {
+							gs = GameObject.Find("GameState").GetComponent<GameState>();
+							gs.startGame();
+						}
+						else {
+							addBack.Add(curr);
+						}
 						break;
 					default:
 						break;
