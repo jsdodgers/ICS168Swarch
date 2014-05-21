@@ -21,6 +21,15 @@ namespace Swarch {
 			pellets = new ArrayList();
 		}
 
+		public void setPlayerPosition(int playerNum, float x, float y, int dir) {
+			foreach (Player p in players) {
+				if (p.id==playerNum) {
+					p.setDirection(dir);
+					p.transform.position = new Vector3(x,y,0);
+				}
+			}
+		}
+
 		public void addPlayer(string playerName, int playerNum) {
 			GameObject go = (GameObject)Instantiate(playerPrefab);
 			go.renderer.enabled = false;

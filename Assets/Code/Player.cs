@@ -61,6 +61,10 @@ namespace Swarch {
 			}
 			transform.Translate(Time.deltaTime*speedX, Time.deltaTime*speedY, 0.0f);
 		}
+
+		void postDirection(int dir) {
+			connection.sendCommand(Command.PlayerPosition(0,transform.position.x,transform.position.y,dir));
+		}
 		
 		void PlayerMoveLeft()
 		{
@@ -68,6 +72,7 @@ namespace Swarch {
 			{
 				speedX = -GetCurrentSpeed();
 				speedY = 0;
+				postDirection(1);
 			}
 		}
 		
@@ -77,6 +82,7 @@ namespace Swarch {
 			{
 				speedX = GetCurrentSpeed();
 				speedY = 0;
+				postDirection(3);
 			}
 		}
 		
@@ -86,6 +92,7 @@ namespace Swarch {
 			{
 				speedX = 0;
 				speedY = GetCurrentSpeed();
+				postDirection(2);
 			}
 		}
 		
@@ -95,6 +102,7 @@ namespace Swarch {
 			{
 				speedX = 0;
 				speedY = -GetCurrentSpeed();
+				postDirection(4);
 			}
 		}
 		

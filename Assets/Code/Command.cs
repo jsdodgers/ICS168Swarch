@@ -24,8 +24,19 @@ namespace Swarch {
 		public int[] roomNums;
 		public int playerStartNum1;
 		public int playerStartNum2;
-		public float playerStartX1, playerStartX2, playerStartY1, playerStartY2;
-		public int playerStartDir1,playerStartDir2;
+		public float playerStartX1, playerStartX2, playerStartY1, playerStartY2, x, y;
+		public int playerStartDir1,playerStartDir2, dir;
+
+		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
+			Command comm = new Command();
+			comm.timeStamp = timeStamp;
+			comm.cType = CType.PlayerPosition;
+			comm.x = xx;
+			comm.y = yy;
+			comm.dir = dirr;
+			comm.message = comm.cType + ":" + timeStamp + ":" + xx + ":" + yy + ":" + dirr + ";";
+			return comm;
+		}
 
 		public static Command Disconnect(long timeStamp) {
 			Command comm = new Command();
@@ -130,6 +141,14 @@ namespace Swarch {
 				Debug.Log("Leave game: " + newCommand.roomNum);
 				newCommand.cType = CType.LeaveGame;
 				newCommand.roomNum = Convert.ToInt32(data[1]);
+				break;
+			case CType.PlayerPosition:
+				newCommand.cType = CType.PlayerPosition;
+				newCommand.timeStamp = long.Parse(data[1]);
+				newCommand.playerNumber = int.Parse(data[2]);
+				newCommand.x = float.Parse(data[3]);
+				newCommand.y = float.Parse(data[4]);
+				newCommand.dir = int.Parse(data[5]);
 				break;
 			default:
 				Console.WriteLine("Command receieved was invalid.");

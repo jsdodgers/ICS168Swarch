@@ -125,6 +125,11 @@ namespace Swarch {
 							addBack.Add(curr);
 						}
 						break;
+					case CType.PlayerPosition:
+						if (Application.loadedLevel==1) {
+							gs = GameObject.Find("GameState").GetComponent<GameState>();
+						}
+						break;
 					default:
 						break;
 					}
