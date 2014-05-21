@@ -17,6 +17,7 @@ namespace SwarchServer
         private bool ready = false;
 
         private bool isConnected = true;
+        public GameState gs;
         private Thread mThread;
         private NetworkStream mStream;
         private TcpClient mClient;
@@ -80,6 +81,10 @@ namespace SwarchServer
                 mStream.Close(20);
                 mClient.Close();
                 GameManager.removePlayer(this);
+                if(gs != null)
+                {
+                    gs.removePlayer(this);
+                }
                 //Thread.Sleep(1000);
             }
         }

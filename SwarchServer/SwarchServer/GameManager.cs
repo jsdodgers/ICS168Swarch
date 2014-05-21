@@ -36,7 +36,7 @@ namespace SwarchServer
             {
                 foreach(GameState gameState in gss)
                 {
-                    if (gameState.playerList.Count > 1)
+                    if (gameState.playerList.Count > 1 && !gameStarted)
                     {
                         startGame(gameState);
                     }
@@ -127,7 +127,10 @@ namespace SwarchServer
         private static void addPlayer(TcpClient client, NetworkStream stream)
         {
             //gs.addPlayer(new Player(client, stream, gs.numberOfPlayers(), gs));
-            playerList.Add(new Player(client, stream, playerList.Count));
+            lock (playerList)
+            {
+                playerList.Add(new Player(client, stream, playerList.Count));
+            }
         }
 
         private static void help()
@@ -142,11 +145,12 @@ namespace SwarchServer
 
         static void Update()
         {
-            ArrayList lockedPlayerList;
+            Player[] lockedPlayerList;
 
             lock (playerList)
             {
-                lockedPlayerList = (ArrayList)playerList.Clone();
+                lockedPlayerList = new Player[playerList.Count];
+                playerList.CopyTo(lockedPlayerList);
             }
 
             foreach (Player player in lockedPlayerList)
@@ -167,6 +171,9 @@ namespace SwarchServer
                                 break;
                             case CType.JoinGame:
                                 joinGame(cmd.playerRoom, player);
+                                break;
+                            case CType.LeaveGame:
+                                leaveGame(cmd.playerRoom, player);
                                 break;
                             case CType.Disconnect:
                                 player.disconnect();
@@ -199,30 +206,26 @@ namespace SwarchServer
                     lrt |= LoginResponseType.SucceededLogin;
                     player.playerName = username;
                     Console.WriteLine(player.playerName + " has connected.");
-                    for (int i = 0; i < playerList.Count; i++)
-                    {
-                        ((Player)playerList[i]).sendCommand(Command.newPlayerCommand(0, username, player.playerNumber));
-
-                        if (player != playerList[i])
-                        {
-                            player.sendCommand(Command.newPlayerCommand(0, ((Player)playerList[i]).playerName, ((Player)playerList[i]).playerNumber));
-                        }
-                    }
                 }
             }
 
             player.sendCommand(Command.loginCommand(0, lrt, gss));
         }
 
-        public static void joinGame(string roomName, Player player)
+        public static void joinGame(int roomName, Player player)
         {
-            int i = 0;
-            while(gss[i].roomName != roomName || i < NUMBER_OF_GAMES)
-            {
-                i++;
-            }
-            gss[i].addPlayer(player);
-            playerList.Remove(player);
+            gss[roomName].addPlayer(player);
+            player.gs = gss[roomName];
+            player.sendCommand(Command.joinGameCommand(0, roomName));
+            Console.WriteLine(player.playerName + " has joined " + gss[roomName].roomName + ".");
+        }
+
+        public static void leaveGame(int roomName, Player player)
+        {
+            gss[roomName].removePlayer(player);
+            player.gs = null;
+            player.sendCommand(Command.leaveGameCommand(0, roomName));
+            Console.WriteLine(player.playerName + " has left " + gss[roomName].roomName + ".");
         }
 
         public static void removePlayer(Player p)

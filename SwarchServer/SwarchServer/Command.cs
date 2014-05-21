@@ -5,12 +5,14 @@ using System.Text;
 
 namespace SwarchServer
 {
-    public enum CType : byte {Login, StartGame, JoinGame, NewPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
+    public enum CType : byte {Login, StartGame, JoinGame, LeaveGame, NewPlayer, LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
     public enum LoginResponseType : int {FailedLogin = 0, SucceededLogin = 1 << 0, NewUser = 1 << 1}
 
     class Command
     {
-        public string message, username, password, playerRoom;
+        public string message, username, password;
+        public float x, y;
+        public int playerRoom;
         public CType cType;
         private long timeStamp;
         private int playerNumber;
@@ -60,6 +62,37 @@ namespace SwarchServer
             return newCommand;
         }
 
+        public static Command joinGameCommand(long ts, int room)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.JoinGame;
+            newCommand.playerRoom = room;
+            newCommand.message = newCommand.cType + ":" + newCommand.playerRoom + ";";
+            return newCommand;
+        }
+
+        public static Command leaveGameCommand(long ts, int room)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.LeaveGame;
+            newCommand.playerRoom = room;
+            newCommand.message = newCommand.cType + ":" + newCommand.playerRoom + ";";
+            return newCommand;
+        }
+
+        public static Command leftPlayerCommand(long ts, string username, int n)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.LeftPlayer;
+            newCommand.username = username;
+            newCommand.playerNumber = n;
+            newCommand.message = newCommand.cType + ":" + newCommand.username + ":" + newCommand.playerNumber + ";";
+            return newCommand;
+        }
+
         public static Command unwrap(string message)
         {
             //Console.WriteLine(message);
@@ -68,26 +101,34 @@ namespace SwarchServer
             {
                 Console.WriteLine(str);
             }*/
-            Command newCommand;
+            Command newCommand = new Command();
             switch((CType)Enum.Parse(typeof(CType), data[0]))
             {
                 case CType.Login:
-                    newCommand = new Command();
                     newCommand.cType = CType.Login;
                     newCommand.username = data[1];
                     newCommand.password = data[2];
                     break;
                 case CType.JoinGame:
-                    newCommand = new Command();
-                    newCommand.playerRoom = data[1];
+                    newCommand.cType = CType.JoinGame;
+                    newCommand.timeStamp = Convert.ToInt32(data[1]);
+                    newCommand.playerRoom = Convert.ToInt32(data[2]);
+                    break;
+                case CType.LeaveGame:
+                    newCommand.cType = CType.LeaveGame;
+                    newCommand.timeStamp = Convert.ToInt32(data[1]);
+                    newCommand.playerRoom = Convert.ToInt32(data[2]);
+                    break;
+                case CType.PlayerPosition:
+                    newCommand.cType = CType.PlayerPosition;
+                    newCommand.timeStamp = Convert.ToInt32(data[1]);
+                    newCommand.timeStamp = Convert.ToInt32(data[1]);
                     break;
                 case CType.Disconnect:
-                    newCommand = new Command();
                     newCommand.cType = CType.Disconnect;
                     break;
                 default:
                     Console.WriteLine("Command receieved was invalid.");
-                    newCommand = new Command();
                     break;
             }
 

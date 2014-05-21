@@ -30,11 +30,12 @@ namespace SwarchServer
 
         void Update()
         {
-            ArrayList lockedPlayerList;
+            Player[] lockedPlayerList;
 
             lock (playerList)
             {
-                lockedPlayerList = playerList;
+                lockedPlayerList = new Player[playerList.Count];
+                playerList.CopyTo(lockedPlayerList);
             }
 
             foreach (Player player in lockedPlayerList)
@@ -78,6 +79,43 @@ namespace SwarchServer
             }
         }
 
+        public void sendPlayerInfo(Player player)
+        {
+            Player[] lockedPlayerList;
+
+            lock (playerList)
+            {
+                lockedPlayerList = new Player[playerList.Count];
+                playerList.CopyTo(lockedPlayerList);
+            }
+
+            for (int i = 0; i < lockedPlayerList.Length; i++)
+            {
+                lockedPlayerList[i].sendCommand(Command.newPlayerCommand(0, player.playerName, player.playerNumber));
+
+                if (player != lockedPlayerList[i])
+                {
+                    player.sendCommand(Command.newPlayerCommand(0, ((Player)lockedPlayerList[i]).playerName, ((Player)lockedPlayerList[i]).playerNumber));
+                }
+            }
+        }
+
+        public void sendPlayerInfoOnLeave(Player player)
+        {
+            Player[] lockedPlayerList;
+
+            lock (playerList)
+            {
+                lockedPlayerList = new Player[playerList.Count];
+                playerList.CopyTo(lockedPlayerList);
+            }
+
+            for (int i = 0; i < lockedPlayerList.Length; i++)
+            {
+                lockedPlayerList[i].sendCommand(Command.leftPlayerCommand(0, player.playerName, player.playerNumber));
+            }
+        }
+
         public void playerPosition(float x, float y, int dir)
         {
 
@@ -89,6 +127,7 @@ namespace SwarchServer
             {
                 playerList.Add(p);
             }
+            sendPlayerInfo(p);
         }
 
         public void removePlayer(Player p)
@@ -97,6 +136,7 @@ namespace SwarchServer
             {
                 playerList.Remove(p);
             }
+            sendPlayerInfoOnLeave(p);
         }
 
         public int numberOfPlayers()
