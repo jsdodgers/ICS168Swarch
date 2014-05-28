@@ -159,7 +159,8 @@ namespace Swarch {
 						break;
 					case CType.RoomUpdate:
 						Room r = rooms.getWithId(comm.roomNum);
-						r.numPlayers = comm.numPlayers;
+						if (r!=null)
+							r.numPlayers = comm.numPlayers;
 						break;
 					default:
 						break;

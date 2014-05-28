@@ -235,6 +235,8 @@ namespace Swarch {
 				newCommand.dir = int.Parse(data[6]);
 				break;
 			case CType.RoomUpdate:
+				Debug.Log("RoomUpdate:  " + message);
+				newCommand.cType = CType.RoomUpdate;
 				newCommand.timeStamp = long.Parse(data[1]);
 				newCommand.roomNum = int.Parse(data[2]);
 				newCommand.numPlayers = int.Parse(data[3]);
