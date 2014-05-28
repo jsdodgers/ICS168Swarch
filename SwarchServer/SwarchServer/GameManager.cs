@@ -222,15 +222,40 @@ namespace SwarchServer
             player.sendCommand(Command.joinGameCommand(0, roomName));
             gss[roomName].addPlayer(player);
             player.gs = gss[roomName];
+            if(gss[roomName].gameStarted)
+            {
+                Player[] lockedPlayerList;
+
+                lock (playerList)
+                {
+                    lockedPlayerList = new Player[gss[roomName].playerList.Count];
+                    gss[roomName].playerList.CopyTo(lockedPlayerList);
+                }
+                
+                player.resetPosition();
+                player.sendCommand(Command.startGameInProgressCommand(0, lockedPlayerList, gss[roomName].pelletList));
+            }
+
+            roomUpdateToAllPlayers(player.gs);
+
             Console.WriteLine(player.playerName + " has joined " + gss[roomName].roomName + ".");
         }
 
         public static void leaveGame(int roomName, Player player)
         {
             gss[roomName].removePlayer(player);
+            roomUpdateToAllPlayers(player.gs);
             player.gs = null;
             player.sendCommand(Command.leaveGameCommand(0, roomName));
             Console.WriteLine(player.playerName + " has left " + gss[roomName].roomName + ".");
+        }
+
+        public static void roomUpdateToAllPlayers(GameState roomUpdated)
+        {
+            foreach (Player p in playerList)
+            {
+                p.sendCommand(Command.roomUpdateCommand(0, roomUpdated));
+            }
         }
 
         public static void removePlayer(Player p)

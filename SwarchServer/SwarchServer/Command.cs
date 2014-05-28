@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SwarchServer
 {
-    public enum CType : byte {Login, StartGame, JoinGame, LeaveGame, NewPlayer, LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect}
+    public enum CType : byte {Login, StartGame, JoinGame, LeaveGame, NewPlayer, LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, RoomUpdate}
     public enum LoginResponseType : int {FailedLogin = 0, SucceededLogin = 1 << 0, NewUser = 1 << 1}
 
     class Command
@@ -47,7 +47,30 @@ namespace SwarchServer
             Command newCommand = new Command();
             newCommand.timeStamp = ts;
             newCommand.cType = CType.StartGame;
-            newCommand.message = newCommand.cType + ":" + p1.playerNumber + ":" + x1 + ":" + y1 + ":" + d1 + ":" + p2.playerNumber + ":" + x2 + ":" + y2 + ":" + d2;
+            newCommand.message = newCommand.cType + ":" + 0 + ":" + p1.playerNumber + ":" + x1 + ":" + y1 + ":" + d1 + ":" + p2.playerNumber + ":" + x2 + ":" + y2 + ":" + d2;
+            for (int i = 0; i < pelletList.Length; ++i)
+            {
+                newCommand.message += ":" + pelletList[i].id + ":" + pelletList[i].x + ":" + pelletList[i].y + ":" + pelletList[i].size;
+            }
+
+            newCommand.message += ";";
+
+            return newCommand;
+        }
+
+        public static Command startGameInProgressCommand(long ts, Player[] playerList, Pellet[] pelletList)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.StartGame;
+            newCommand.message = newCommand.cType + ":" + 1 + ":" + playerList.Length;
+
+            for (int i = 0; i < playerList.Length; ++i )
+            {
+                newCommand.message += ":" + playerList[i].playerNumber + ":" + playerList[i].x + ":" + playerList[i].y + ":" + playerList[i].dir + ":" + playerList[i].size;
+            }
+            newCommand.message += ":" + pelletList.Length;
+
             for (int i = 0; i < pelletList.Length; ++i)
             {
                 newCommand.message += ":" + pelletList[i].id + ":" + pelletList[i].x + ":" + pelletList[i].y + ":" + pelletList[i].size;
@@ -136,6 +159,16 @@ namespace SwarchServer
             newCommand.timeStamp = ts;
             newCommand.cType = CType.Death;
             newCommand.message = newCommand.cType + ":" + ts + ":" + p1.playerNumber + ":" + p1.size + ":" + p1.x + ":" + p1.y + ":" + p1.dir + ";";
+
+            return newCommand;
+        }
+
+        public static Command roomUpdateCommand(long ts, GameState gs)
+        {
+            Command newCommand = new Command();
+            newCommand.timeStamp = ts;
+            newCommand.cType = CType.RoomUpdate;
+            newCommand.message = newCommand.cType + ":" + ts + ":" + gs.roomID +":" + gs.playerList.Count + ";";
 
             return newCommand;
         }
