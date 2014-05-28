@@ -40,7 +40,8 @@ namespace Swarch {
 
 		public void addPlayer(string playerName, int playerNum) {
 			GameObject go = (GameObject)Instantiate(playerPrefab);
-			go.renderer.enabled = false;
+			if (!gameStarted)
+				go.renderer.enabled = false;
 			Player p = go.GetComponent<Player>();
 			SpriteRenderer sp = p.GetComponent<SpriteRenderer>();
 			if (players.Count==0) sp.color = Color.blue;
