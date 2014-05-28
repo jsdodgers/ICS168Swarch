@@ -38,5 +38,14 @@ namespace Swarch {
 		public Room get(int n) {
 			return (Room)rooms[n];
 		}
+
+		public Room getWithId(int id) {
+			foreach (Room r in rooms) {
+				if (r.id==id) {
+					return r;
+				}
+			}
+			return null;
+		}
 	}
 }

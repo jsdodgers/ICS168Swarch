@@ -157,6 +157,10 @@ namespace Swarch {
 							gs.setPlayerPosition(comm.playerId,comm.playerX,comm.playerY,comm.dir);
 						}
 						break;
+					case CType.RoomUpdate:
+						Room r = rooms.getWithId(comm.roomNum);
+						r.numPlayers = comm.numPlayers;
+						break;
 					default:
 						break;
 					}

@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum CType : byte {Login, StartGame, NewPlayer,LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, JoinGame, LeaveGame}
+public enum CType : byte {Login, StartGame, NewPlayer,LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, JoinGame, LeaveGame, RoomUpdate}
 public enum LoginResponseType : int {
 	FailedLogin		= 0,
 	SucceededLogin	= 1 << 0,
@@ -35,6 +35,7 @@ namespace Swarch {
 		public int eatenPlayerId,eatingPlayerId;
 		public float playerX,playerY,eatenPlayerSize,eatingPlayerSize;
 		public int type;
+		public int numPlayers;
 
 		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
 			Command comm = new Command();
@@ -232,6 +233,11 @@ namespace Swarch {
 				newCommand.playerX = float.Parse(data[4]);
 				newCommand.playerY = float.Parse(data[5]);
 				newCommand.dir = int.Parse(data[6]);
+				break;
+			case CType.RoomUpdate:
+				newCommand.timeStamp = long.Parse(data[1]);
+				newCommand.roomNum = int.Parse(data[2]);
+				newCommand.numPlayers = int.Parse(data[3]);
 				break;
 			default:
 				break;
