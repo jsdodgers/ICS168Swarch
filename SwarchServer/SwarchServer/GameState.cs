@@ -292,10 +292,12 @@ namespace SwarchServer
 
         private void serverLoop()
         {
-            while(isServerRunning)
-            {
-                Update();
-            }
+			Timer t = new Timer(Update,null,0,50);
+
+//			while(isServerRunning)
+//			{
+//				Update();
+//			}
         }
     }
 }

@@ -32,47 +32,7 @@ namespace SwarchServer
             gameLoop = new Thread(new ThreadStart(serverLoop));
             gameLoop.Start();
             startServer();
-            while(true)
-            {
-                foreach(GameState gameState in gss)
-                {
-                    if (gameState.playerList.Count > 1 && !gameState.gameStarted)
-                    {
-                        startGame(gameState);
-                    }
-                    if(gameState.playerList.Count < 1)
-                    {
-                        gameState.gameStarted = false;
-                    }
-                }
-            }
-            /*
-            while(true)
-            {
-                switch (Console.ReadLine())
-                {
-                    case "START SERVER":
-                        startServer();
-                        break;
-                    case "START GAME":
-                        startGame();
-                        break;
-                    case "HELP":
-                    case "COMMANDS":
-                        help();
-                        break;
-                    case "RESET":
-                        reset();
-                        break;
-                    case "QUIT":
-                    case "Q":
-                        quit();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid command.  Type HELP for valid commands.");
-                        break;
-                }
-            }*/
+           
         }
 
         private static void startServer()
@@ -239,7 +199,8 @@ namespace SwarchServer
             roomUpdateToAllPlayers(player.gs);
 
             Console.WriteLine(player.playerName + " has joined " + gss[roomName].roomName + ".");
-        }
+			startStopGame(gss[roomName]);
+		}
 
         public static void leaveGame(int roomName, Player player)
         {
@@ -248,7 +209,19 @@ namespace SwarchServer
             player.gs = null;
             player.sendCommand(Command.leaveGameCommand(0, roomName));
             Console.WriteLine(player.playerName + " has left " + gss[roomName].roomName + ".");
-        }
+			startStopGame(gss[roomName]);
+		}
+
+		public static void startStopGame(GameState gameState) {
+			if (gameState.playerList.Count > 1 && !gameState.gameStarted)
+			{
+				startGame(gameState);
+			}
+			if(gameState.playerList.Count < 1)
+			{
+				gameState.gameStarted = false;
+			}
+		}
 
         public static void roomUpdateToAllPlayers(GameState roomUpdated)
         {
