@@ -51,10 +51,46 @@ namespace Swarch {
 				go.renderer.enabled = false;
 			Player p = go.GetComponent<Player>();
 			SpriteRenderer sp = p.GetComponent<SpriteRenderer>();
-			if (players.Count==0) sp.color = Color.blue;
-			else if (players.Count==1) sp.color = Color.red;
-			else if (players.Count==2) sp.color = Color.green;
-			else if (players.Count==3) sp.color = Color.yellow;
+		//	if (players.Count==0) sp.color = Color.blue;
+		//	else if (players.Count==1) sp.color = Color.red;
+		//	else if (players.Count==2) sp.color = Color.green;
+		//	else if (players.Count==3) sp.color = Color.yellow;
+			switch (playerNum%16) {
+			case 0:
+				sp.color = Color.blue;break;
+			case 1:
+				sp.color = Color.red;break;
+			case 2:
+				sp.color = Color.green;break;
+			case 3:
+				sp.color = Color.yellow;break;
+			case 4:
+				sp.color = Color.cyan;break;
+			case 5:
+				sp.color = Color.magenta;break;
+			case 6:
+				sp.color = Color.white;break;
+			case 7:
+				sp.color = Color.gray;break;
+			case 8:
+				sp.color = Color.black;break;
+			case 9:
+				sp.color = new Color(.12,.4,.92);break;
+			case 10:
+				sp.color = new Color(.92,.4,.92);break;
+			case 11:
+				sp.color = new Color(.3,.3,.92);break;
+			case 12:
+				sp.color = new Color(.12,.4,.1);break;
+			case 13:
+				sp.color = new Color(.52,.9,.92);break;
+			case 14:
+				sp.color = new Color(.52,.9,.11);break;
+			case 15:
+				sp.color = new Color(.99,.2,.2);break;
+			default:
+				sp.color = Color.white;break;
+			}
 			players.Add(p);
 			p.name = playerName;
 			p.score = score;
