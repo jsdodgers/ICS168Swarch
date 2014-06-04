@@ -75,19 +75,19 @@ namespace Swarch {
 			case 8:
 				sp.color = Color.black;break;
 			case 9:
-				sp.color = new Color(.12,.4,.92);break;
+				sp.color = new Color(.12f,.4f,.92f);break;
 			case 10:
-				sp.color = new Color(.92,.4,.92);break;
+				sp.color = new Color(.92f,.4f,.92f);break;
 			case 11:
-				sp.color = new Color(.3,.3,.92);break;
+				sp.color = new Color(.3f,.3f,.92f);break;
 			case 12:
-				sp.color = new Color(.12,.4,.1);break;
+				sp.color = new Color(.12f,.4f,.1f);break;
 			case 13:
-				sp.color = new Color(.52,.9,.92);break;
+				sp.color = new Color(.52f,.9f,.92f);break;
 			case 14:
-				sp.color = new Color(.52,.9,.11);break;
+				sp.color = new Color(.52f,.9f,.11f);break;
 			case 15:
-				sp.color = new Color(.99,.2,.2);break;
+				sp.color = new Color(.99f,.2f,.2f);break;
 			default:
 				sp.color = Color.white;break;
 			}
