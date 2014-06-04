@@ -59,17 +59,43 @@ namespace SwarchServer
 		    return s;
 	    }
 
+        public void setScore(string username, int score) {
+            SQLiteCommand dbcmd = dbcon.CreateCommand();
+            string Sql = "UPDATE scores SET score =? WHERE username =?;";
+            dbcmd.CommandText = Sql;
+            SQLiteParameter param1 = new SQLiteParameter();
+            SQLiteParameter param2 = new SQLiteParameter();
+            param1.Value = score;
+            param2.Value = username;
+            dbcmd.Parameters.Add(param1);
+            dbcmd.Parameters.Add(param2);
+            SQLiteDataReader reader = dbcmd.ExecuteReader();
+
+
+            reader.Close();
+            reader = null;
+            // dispose of database commands
+            dbcmd.Dispose();
+            dbcmd = null;
+        }
+
 	    // add users to the database
 	    public bool addUser(string username, string password) {
 		    SQLiteCommand dbcmd = dbcon.CreateCommand();
-		    string Sql = "INSERT INTO users VALUES (?,?);";
+		    string Sql = "INSERT INTO users VALUES (?,?); INSERT INTO scores VALUES (?,?);";
 		    dbcmd.CommandText = Sql;
 		    SQLiteParameter param1 = new SQLiteParameter();
-		    SQLiteParameter param2 = new SQLiteParameter();
+            SQLiteParameter param2 = new SQLiteParameter();
+            SQLiteParameter param3 = new SQLiteParameter();
+            SQLiteParameter param4 = new SQLiteParameter();
 		    param1.Value = username;
 		    param2.Value = password;
+            param3.Value = username;
+            param4.Value = 0;
 		    dbcmd.Parameters.Add(param1);
-		    dbcmd.Parameters.Add(param2);
+            dbcmd.Parameters.Add(param2);
+            dbcmd.Parameters.Add(param3);
+            dbcmd.Parameters.Add(param4);
 		    SQLiteDataReader reader = dbcmd.ExecuteReader();
 
 

@@ -26,6 +26,7 @@ namespace SwarchServer
 
         private bool isConnected = true;
         public GameState gs;
+        public int gsID = -1;
         private Thread mThread;
         private NetworkStream mStream;
         private TcpClient mClient;
@@ -153,12 +154,20 @@ namespace SwarchServer
                     playerRect.Y = (int)(y * 10) - playerRect.Height/2;
                     lastTime = currentTime;
 
-                    foreach(Pellet pellet in gs.pelletList)
+                    Pellet[] pellets;
+                    if (gs != null)
                     {
-                        Rectangle r = Rectangle.Intersect(pellet.pelletRect, playerRect);
-                        if (!r.IsEmpty)
+                        lock (gs.pelletList)
                         {
-                            gs.eatPellet(pellet.id, this);
+                            pellets = gs.pelletList;
+                        }
+                        foreach(Pellet pellet in pellets)
+                        {
+                            Rectangle r = Rectangle.Intersect(pellet.pelletRect, playerRect);
+                            if (!r.IsEmpty)
+                            {
+                                gs.eatPellet(pellet.id, this);
+                            }
                         }
                     }
 

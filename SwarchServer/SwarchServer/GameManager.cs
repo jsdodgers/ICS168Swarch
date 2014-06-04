@@ -181,8 +181,14 @@ namespace SwarchServer
         public static void joinGame(int roomName, Player player)
         {
             player.sendCommand(Command.joinGameCommand(0, roomName));
-            gss[roomName].addPlayer(player);
             player.gs = gss[roomName];
+            if (player.gsID != player.gs.roomID)
+            {
+                player.score = 0;
+            }
+            gss[roomName].addPlayer(player);
+            
+            player.gsID = player.gs.roomID;
             if(gss[roomName].gameStarted)
             {
                 Player[] lockedPlayerList;
