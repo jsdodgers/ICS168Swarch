@@ -168,7 +168,7 @@ namespace SwarchServer
                 if(id == pelletList[i].id)
                 {
                     p.increaseSize(pelletList[i].size);
-                    p.score += 1;
+                    p.addScore(1);
                     Console.WriteLine("Size: " + p.size);
                     int oldPelletID = pelletList[i].id;
                     spawnPellet(i);
@@ -192,7 +192,7 @@ namespace SwarchServer
         {
             p2.isDead = true;
             p1.increaseSize(p2.size);
-            p1.score += 10;
+            p1.addScore(10);
             p2.resetPosition();
 
             Player[] lockedPlayerList;

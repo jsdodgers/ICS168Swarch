@@ -77,6 +77,20 @@ namespace SwarchServer
             speedY = (dir % 2 == 0 ? getCurrentSpeed() * (dir - 3) : 0);
         }
 
+        public void addScore(int i)
+        {
+            score += i;
+            int highScore = GameManager.db.getScore(playerName);
+            if(highScore < 0)
+            {
+                GameManager.db.addUserScore(playerName, score);
+            }
+            else if(highScore < score)
+            {
+                GameManager.db.setScore(playerName, score);
+            }
+        }
+
         public void increaseSize(float s)
         {
             size += s;
