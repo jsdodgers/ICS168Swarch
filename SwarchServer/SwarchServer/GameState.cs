@@ -4,6 +4,7 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Timers;
 using System.Drawing;
 
 namespace SwarchServer
@@ -21,6 +22,7 @@ namespace SwarchServer
         public ArrayList playerList;
         public Pellet[] pelletList;
         public bool isServerRunning = true;
+        System.Timers.Timer t;
         //public SQLiteDB db = new SQLiteDB();
         Thread gameLoop;
 
@@ -37,7 +39,7 @@ namespace SwarchServer
             //db.dbConnect("users.sqlite");
         }
 
-        void Update()
+        void Update(object source, ElapsedEventArgs e)
         {
             Player[] lockedPlayerList;
 
@@ -292,7 +294,10 @@ namespace SwarchServer
 
         private void serverLoop()
         {
-			Timer t = new Timer(Update,null,0,50);
+			t = new System.Timers.Timer(50);
+            t.Elapsed += Update;
+
+            t.Enabled = true;
 
 //			while(isServerRunning)
 //			{
