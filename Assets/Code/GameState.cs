@@ -136,7 +136,11 @@ namespace Swarch {
 			float height = Screen.height;
 			TextAnchor t = GUI.skin.label.alignment;
 			int fontSize = GUI.skin.label.fontSize;
-			GUI.Label(new Rect(10, 10, 200, 20), globalVariables.GetPlayerName());
+//			GUI.Label(new Rect(10, 10, 200, 20), globalVariables.GetPlayerName());
+			int curr = 0;
+			foreach (Player p in players) {
+				GUI.Label(new Rect(10,10 + 20*curr,200,20), p.name);
+			}
 			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 			if (connection.currentRoom>0) {
 				GUI.Label(new Rect(0,0,width,40),connection.rooms.get(connection.currentRoom).name);
