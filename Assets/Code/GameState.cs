@@ -140,6 +140,7 @@ namespace Swarch {
 			int curr = 0;
 			foreach (Player p in players) {
 				GUI.Label(new Rect(10,10 + 20*curr,200,20), p.name);
+				curr++;
 			}
 			GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 			if (connection.currentRoom>0) {
