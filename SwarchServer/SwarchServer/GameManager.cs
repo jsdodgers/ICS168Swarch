@@ -46,7 +46,7 @@ namespace SwarchServer
                 gss = new GameState[NUMBER_OF_GAMES];
 
                 gameStarted = false;
-				string[] names = new string[] {"Butterflies","Hurricanes","Stockholm","Syndrome"};
+				string[] names = new string[] {"Butterflies","Hurricanes","Black Holes","Revelations","Stockholm","Syndrome"};
                 for (int i = 0; i < NUMBER_OF_GAMES; i++ )
                 {
 					gss[i] = new GameState(names[i], i);//"Foo foo for you " + i, i);
