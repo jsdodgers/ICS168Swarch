@@ -5,6 +5,12 @@ using System.Data;
 
 namespace SwarchServer
 {
+    public struct highScoreBundle
+    {
+        public string username;
+        public int score;
+    }
+    
     public class SQLiteDB
     {
 	    SQLiteConnection dbcon = null;
@@ -124,6 +130,51 @@ namespace SwarchServer
             dbcmd = null;
 
             return s;
+        }
+
+        public highScoreBundle[] getHighScores(int n)
+        {
+            highScoreBundle[] highScores = new highScoreBundle[n];
+            SQLiteCommand dbcmd = dbcon.CreateCommand();
+            string Sql = "SELECT username,score FROM scores ORDER BY score DESC LIMIT ?";
+            dbcmd.CommandText = Sql;
+            SQLiteParameter param = new SQLiteParameter();
+            param.Value = n;
+            dbcmd.Parameters.Add(param);
+            SQLiteDataReader reader = dbcmd.ExecuteReader();
+            int s = 0;
+            while (reader.Read())
+            {
+                highScoreBundle hsb = new highScoreBundle();
+                hsb.username = reader.GetString(0);
+                hsb.score = reader.GetInt32(1);
+                highScores[s] = hsb;
+                s++;
+                if (s >= n)
+                {
+                    break;
+                }
+            }
+
+            if(s < n)
+            {
+                highScoreBundle[] newHighScore = new highScoreBundle[s];
+                for (int i = 0; i < s; i++)
+                {
+                    newHighScore[i] = highScores[i];
+                }
+                highScores = newHighScore;
+            }
+
+            // for security reasons...
+            // close reader
+            reader.Close();
+            reader = null;
+            // dispose of database commands
+            dbcmd.Dispose();
+            dbcmd = null;
+
+            return highScores;
         }
 
 	    // add users to the database

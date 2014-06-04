@@ -141,6 +141,9 @@ namespace SwarchServer
                             case CType.LeaveGame:
                                 leaveGame(cmd.playerRoom, player);
                                 break;
+                            case CType.HighScore:
+                                player.sendCommand(Command.highScoreCommand(db.getHighScores(10), player.playerName));
+                                break;
                             case CType.Disconnect:
                                 player.disconnect();
                                 Console.WriteLine(player.playerName + " has disconnected.");

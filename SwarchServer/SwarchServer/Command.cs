@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SwarchServer
 {
-    public enum CType : byte {Login, StartGame, JoinGame, LeaveGame, NewPlayer, LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, RoomUpdate}
+    public enum CType : byte {Login, StartGame, JoinGame, LeaveGame, NewPlayer, LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, RoomUpdate, HighScore}
     public enum LoginResponseType : int {FailedLogin = 0, SucceededLogin = 1 << 0, NewUser = 1 << 1}
 
     class Command
@@ -170,6 +170,21 @@ namespace SwarchServer
             newCommand.timeStamp = ts;
             newCommand.cType = CType.RoomUpdate;
             newCommand.message = newCommand.cType + ":" + ts + ":" + gs.roomID +":" + gs.playerList.Count + ";";
+
+            return newCommand;
+        }
+
+        public static Command highScoreCommand(highScoreBundle[] hsbs, string username)
+        {
+            Command newCommand = new Command();
+            newCommand.cType = CType.HighScore;
+            newCommand.message = newCommand.cType + ":" + hsbs.Length;
+            for (int i = 0; i < hsbs.Length; i++ )
+            {
+                newCommand.message += ":" + hsbs[i].username + ":" + hsbs[i].score;
+            }
+
+            newCommand.message += ":" + GameManager.db.getScore(username) + ";";
 
             return newCommand;
         }
