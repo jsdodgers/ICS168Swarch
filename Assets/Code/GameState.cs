@@ -21,6 +21,12 @@ namespace Swarch {
 			pellets = new ArrayList();
 		}
 
+		public void addPlayerScore(int playerNum, int score) {
+			foreach (Player p in players) { 
+				p.score+=score;
+			}
+		}
+
 		public void setPlayerPosition(int playerNum, float x, float y, int dir) {
 			foreach (Player p in players) {
 				if (p.id==playerNum) {
@@ -139,7 +145,7 @@ namespace Swarch {
 //			GUI.Label(new Rect(10, 10, 200, 20), globalVariables.GetPlayerName());
 			int curr = 0;
 			foreach (Player p in players) {
-				GUI.Label(new Rect(10,10 + 20*curr,200,20), p.name);
+				GUI.Label(new Rect(10,10 + 20*curr,200,20), p.name + "   " + p.score);
 				curr++;
 			}
 			GUI.skin.label.alignment = TextAnchor.MiddleCenter;

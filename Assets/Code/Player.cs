@@ -8,6 +8,7 @@ namespace Swarch {
 		Global globalVariables;
 		public GameObject player;
 		public bool isSelf = false;
+		public int score = 0;
 		float maxSpeed = 4, speedX, speedY, size = 1;
 		public string name;
 		public int id;

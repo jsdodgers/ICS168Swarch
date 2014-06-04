@@ -140,6 +140,7 @@ namespace Swarch {
 							gs.removePellet(comm.oldPelletId);
 							gs.addPellet(comm.newPelletId,comm.pelletX,comm.pelletY,comm.pelletSize);
 							gs.setPlayerSize(comm.playerId, comm.playerNewSize);
+							gs.addPlayerScore(comm.playerId,1);
 						}
 						break;
 					case CType.EatPlayer:
@@ -148,6 +149,7 @@ namespace Swarch {
 							gs.setPlayerSize(comm.eatingPlayerId, comm.eatingPlayerSize);
 							gs.setPlayerSize(comm.eatenPlayerId, comm.eatenPlayerSize);
 							gs.setPlayerPosition(comm.eatenPlayerId,comm.playerX,comm.playerY,comm.dir);
+							gs.addPlayerScore(comm.playerId,10);
 						}
 						break;
 					case CType.Death:
