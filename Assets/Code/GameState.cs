@@ -23,7 +23,8 @@ namespace Swarch {
 
 		public void addPlayerScore(int playerNum, int score) {
 			foreach (Player p in players) { 
-				p.score+=score;
+				if (p.id==playerNum)
+					p.score+=score;
 			}
 		}
 

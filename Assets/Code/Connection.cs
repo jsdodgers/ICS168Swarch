@@ -149,7 +149,7 @@ namespace Swarch {
 							gs.setPlayerSize(comm.eatingPlayerId, comm.eatingPlayerSize);
 							gs.setPlayerSize(comm.eatenPlayerId, comm.eatenPlayerSize);
 							gs.setPlayerPosition(comm.eatenPlayerId,comm.playerX,comm.playerY,comm.dir);
-							gs.addPlayerScore(comm.playerId,10);
+							gs.addPlayerScore(comm.eatingPlayerId,10);
 						}
 						break;
 					case CType.Death:
