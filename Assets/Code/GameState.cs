@@ -45,7 +45,7 @@ namespace Swarch {
 			}
 		}
 
-		public void addPlayer(string playerName, int playerNum) {
+		public void addPlayer(string playerName, int playerNum, int score) {
 			GameObject go = (GameObject)Instantiate(playerPrefab);
 			if (!gameStarted)
 				go.renderer.enabled = false;
@@ -57,6 +57,7 @@ namespace Swarch {
 			else if (players.Count==3) sp.color = Color.yellow;
 			players.Add(p);
 			p.name = playerName;
+			p.score = score;
 			p.id = playerNum;
 			p.isSelf = (playerName==globalVariables.GetPlayerName());
 		}

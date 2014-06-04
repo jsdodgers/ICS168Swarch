@@ -89,7 +89,7 @@ namespace Swarch {
 					//	loginScreen2.playerNames.Add(playerName);
 						if (Application.loadedLevel==1) {
 							gs = GameObject.Find("GameState").GetComponent<GameState>();
-							gs.addPlayer(playerName,comm.playerNumber);
+							gs.addPlayer(playerName,comm.playerNumber,comm.score);
 						}
 						else {
 							addBack.Add(curr);

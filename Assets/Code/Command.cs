@@ -36,6 +36,7 @@ namespace Swarch {
 		public float playerX,playerY,eatenPlayerSize,eatingPlayerSize;
 		public int type;
 		public int numPlayers;
+		public int score;
 
 		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
 			Command comm = new Command();
@@ -181,6 +182,7 @@ namespace Swarch {
 				newCommand.cType = CType.NewPlayer;
 				newCommand.username = data[1];
 				newCommand.playerNumber = Convert.ToInt32(data[2]);
+				newCommand.score = int.Parse(data[3]);
 				break;
 			case CType.LeftPlayer:
 				newCommand.cType = CType.LeftPlayer;
