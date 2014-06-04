@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum CType : byte {Login, StartGame, NewPlayer,LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, JoinGame, LeaveGame, RoomUpdate}
+public enum CType : byte {Login, StartGame, NewPlayer,LeftPlayer, PlayerPosition, SizeUpdate, EatPellet, SpawnPellet, EatPlayer, Death, Disconnect, JoinGame, LeaveGame, RoomUpdate, HighScore}
 public enum LoginResponseType : int {
 	FailedLogin		= 0,
 	SucceededLogin	= 1 << 0,
@@ -16,7 +16,6 @@ namespace Swarch {
 		public CType cType;
 		private long timeStamp;
 		public int playerNumber;
-		public int[] scores;
 		private const char delimiter = ':';
 		public LoginResponseType loginResponse;
 		public int numRooms, roomNum;
@@ -37,6 +36,10 @@ namespace Swarch {
 		public int type;
 		public int numPlayers;
 		public int score;
+		public int numScores;
+		public string[] usernames;
+		public int[] scores;
+		public int rank;
 
 		public static Command PlayerPosition(long timeStamp, float xx, float yy, int dirr) {
 			Command comm = new Command();
@@ -46,6 +49,14 @@ namespace Swarch {
 			comm.y = yy;
 			comm.dir = dirr;
 			comm.message = comm.cType + ":" + timeStamp + ":" + xx + ":" + yy + ":" + dirr + ";";
+			return comm;
+		}
+
+		public static Command HighScore(long timeStamp) {
+			Command comm = new Command();
+			comm.timeStamp = timeStamp;
+			comm.cType = CType.HighScore;
+			comm.message = comm.cType + ";";
 			return comm;
 		}
 
@@ -242,6 +253,19 @@ namespace Swarch {
 				newCommand.timeStamp = long.Parse(data[1]);
 				newCommand.roomNum = int.Parse(data[2]);
 				newCommand.numPlayers = int.Parse(data[3]);
+				break;
+			case CType.HighScore:
+				newCommand.cType = CType.HighScore;
+				int curr1 = 1;
+				newCommand.numScores = int.Parse(data[curr1]);curr1++;
+				newCommand.usernames = new string[newCommand.numScores];
+				newCommand.scores = new int[newCommand.numScores];
+				for (int n=0;n<newCommand.numScores;n++) {
+					newCommand.usernames[n] = data[curr1];curr1++;
+					newCommand.scores[n] = int.Parse(data[curr1]);curr1++;
+				}
+				newCommand.rank = int.Parse(data[curr1]);curr1++;
+				newCommand.score = int.Parse(data[curr1]);curr1++;
 				break;
 			default:
 				break;

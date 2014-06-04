@@ -65,10 +65,11 @@ namespace Swarch {
 					string curr = (string)socks.recvBuffer.Dequeue();
 					Command comm = Command.unwrap(curr);
 					GameState gs;
+					Login loginScreen;
 					switch(comm.cType) {
 					case CType.Login:
 						LoginResponseType type = comm.loginResponse;
-						Login loginScreen = GameObject.Find("Login").GetComponent<Login>();
+						loginScreen = GameObject.Find("Login").GetComponent<Login>();
 						if (!((type & LoginResponseType.NewUser)==LoginResponseType.FailedLogin)) {
 							loginScreen.newUser();
 						}
@@ -163,6 +164,10 @@ namespace Swarch {
 						Room r = rooms.getWithId(comm.roomNum);
 						if (r!=null)
 							r.numPlayers = comm.numPlayers;
+						break;
+					case CType.HighScore:
+						loginScreen = GameObject.Find("Login").GetComponent<Login>();
+						loginScreen.setHighScores(comm.scores,comm.usernames,comm.rank,comm.score);
 						break;
 					default:
 						break;

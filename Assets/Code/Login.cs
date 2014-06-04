@@ -18,6 +18,11 @@ namespace Swarch {
 		bool rememberPass;
 		bool newAccount;
 		string connectionString = "";
+		string[] usernames;
+		int[] scores;
+		int yourScore;
+		int yourRank;
+		public bool showingScores;
 		// Use this for initialization
 		void Start()
 		{
@@ -95,7 +100,7 @@ namespace Swarch {
 				}
 				
 			}
-			else {
+			else if (!showingScores) {
 
 				int numRooms = connection.rooms.count();
 				float sidePerc = .07f;
@@ -119,6 +124,9 @@ namespace Swarch {
 				if (GUI.Button(new Rect(width - 140.0f,15.0f, 125.0f,30.0f),"Logout")) {
 					disconnect();
 				}
+				if (GUI.Button(new Rect(140.0f,15.0f,125.0f,30.0f),"High Scores")) {
+					getHighScores();
+				}
 				/*
 				int old = GUI.skin.label.fontSize;
 				GUI.skin.label.fontSize = 30;
@@ -136,11 +144,47 @@ namespace Swarch {
 					Application.Quit();
 				}*/
 			}
+			else {
+				float scoreWidth = 250;
+				float scoreHeight = 20;
+				TextAnchor a = GUI.skin.label.alignment;
+				for (int n=0;n<scores.Length;n++) {
+					GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+					GUI.Label(new Rect((width - scoreWidth)/2,50 + scoreHeight*n,scoreWidth,scoreHeight),(n+1) + ". " + usernames[n]);
+					GUI.skin.label.alignment = TextAnchor.MiddleRight;
+					GUI.Label(new Rect((width - scoreWidth)/2,50 + scoreHeight*n,scoreWidth,scoreHeight),"" + scores[n]);
+				}
+
+				GUI.skin.label.alignment = TextAnchor.MiddleLeft;
+				GUI.Label(new Rect((width - scoreWidth)/2,50 + scoreHeight *(scores.Length + 1),scoreWidth,scoreHeight),yourRank + ". " + player1Name);
+				GUI.skin.label.alignment = TextAnchor.MiddleRight;
+				GUI.Label(new Rect((width - scoreWidth)/2,50 + scoreHeight*(scores.Length + 1),scoreWidth,scoreHeight),"" + yourScore);
+				GUI.skin.label.alignment = a;
+				if (GUI.Button(new Rect(width - 140.0f,15.0f, 125.0f,30.0f),"Logout")) {
+					disconnect();
+				}
+				if (GUI.Button(new Rect(140.0f,15.0f,125.0f,30.0f),"Rooms")) {
+					leaveHighScores();
+				}
+			}
+		}
+		void leaveHighScores() {
+			this.showingScores = false;
+		}
+		void getHighScores() {
+			connection.sendCommand(Command.HighScore(0));
 		}
 
-
+		public void setHighScores(int[] scores,string[] playerNames, int rank, int yourScore) {
+			this.scores = scores;
+			this.usernames = playerNames;
+			this.yourRank = rank;
+			this.yourScore = yourScore;
+			this.showingScores = true;
+		}
 
 		void disconnect() {
+			this.showingScores = false;
 			Command comm = Command.Disconnect(0);
 			byte[] bytes = Encoding.UTF8.GetBytes(comm.message);
 			connection.socks.SendTCPPacket(bytes);
