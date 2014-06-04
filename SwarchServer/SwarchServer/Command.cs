@@ -17,7 +17,7 @@ namespace SwarchServer
         public CType cType;
         private long timeStamp;
         private int playerNumber;
-        public int[] scores;
+        public int score;
         private const char delimiter = ':';
         public LoginResponseType loginResponse;
 
@@ -81,14 +81,15 @@ namespace SwarchServer
             return newCommand;
         }
 
-        public static Command newPlayerCommand(long ts, string username, int n)
+        public static Command newPlayerCommand(long ts, string username, int n, int score)
         {
             Command newCommand = new Command();
             newCommand.timeStamp = ts;
             newCommand.cType = CType.NewPlayer;
             newCommand.username = username;
             newCommand.playerNumber = n;
-            newCommand.message = newCommand.cType + ":" + newCommand.username + ":" + newCommand.playerNumber + ";";
+            newCommand.score = score;
+            newCommand.message = newCommand.cType + ":" + newCommand.username + ":" + newCommand.playerNumber + ":" + newCommand.score +";";
             return newCommand;
         }
 

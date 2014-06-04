@@ -19,7 +19,7 @@ namespace SwarchServer
         public int playerNumber;
         public Rectangle playerRect;
         public int dir;
-        private int score = 0;
+        public int score = 0;
         public float size, x, y, speedX, speedY;
         private float maxSpeed = 4.0f;
         public bool isDead = false;

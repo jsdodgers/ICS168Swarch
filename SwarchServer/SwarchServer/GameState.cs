@@ -168,6 +168,7 @@ namespace SwarchServer
                 if(id == pelletList[i].id)
                 {
                     p.increaseSize(pelletList[i].size);
+                    p.score += 1;
                     Console.WriteLine("Size: " + p.size);
                     int oldPelletID = pelletList[i].id;
                     spawnPellet(i);
@@ -191,7 +192,7 @@ namespace SwarchServer
         {
             p2.isDead = true;
             p1.increaseSize(p2.size);
-
+            p1.score += 10;
             p2.resetPosition();
 
             Player[] lockedPlayerList;
@@ -238,11 +239,11 @@ namespace SwarchServer
 
             for (int i = 0; i < lockedPlayerList.Length; i++)
             {
-                lockedPlayerList[i].sendCommand(Command.newPlayerCommand(0, player.playerName, player.playerNumber));
+                lockedPlayerList[i].sendCommand(Command.newPlayerCommand(0, player.playerName, player.playerNumber, player.score));
 
                 if (player != lockedPlayerList[i])
                 {
-                    player.sendCommand(Command.newPlayerCommand(0, ((Player)lockedPlayerList[i]).playerName, ((Player)lockedPlayerList[i]).playerNumber));
+                    player.sendCommand(Command.newPlayerCommand(0, ((Player)lockedPlayerList[i]).playerName, ((Player)lockedPlayerList[i]).playerNumber, ((Player)lockedPlayerList[i]).score));
                 }
             }
         }
