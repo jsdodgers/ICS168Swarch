@@ -184,7 +184,7 @@ namespace SwarchServer
                 newCommand.message += ":" + hsbs[i].username + ":" + hsbs[i].score;
             }
 
-            newCommand.message += ":" + GameManager.db.getScore(username) + ";";
+            newCommand.message += ":" + GameManager.db.getRank(username) + ":" + GameManager.db.getScore(username) + ";";
 
             return newCommand;
         }
@@ -221,6 +221,9 @@ namespace SwarchServer
                     newCommand.x = float.Parse(data[2]);
                     newCommand.y = float.Parse(data[3]);
                     newCommand.dir = int.Parse(data[4]);
+                    break;
+                case CType.HighScore:
+                    newCommand.cType = CType.HighScore;
                     break;
                 case CType.Disconnect:
                     newCommand.cType = CType.Disconnect;

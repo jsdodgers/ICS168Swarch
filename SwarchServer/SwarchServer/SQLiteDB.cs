@@ -177,6 +177,31 @@ namespace SwarchServer
             return highScores;
         }
 
+        public int getRank(string username)
+        {
+            SQLiteCommand dbcmd = dbcon.CreateCommand();
+            string Sql = "SELECT count(*) FROM scores WHERE score>(SELECT score FROM scores WHERE username=?);";
+            dbcmd.CommandText = Sql;
+            SQLiteParameter param = new SQLiteParameter();
+            param.Value = username;
+            dbcmd.Parameters.Add(param);
+            SQLiteDataReader reader = dbcmd.ExecuteReader();
+            int rank = -1;
+            while (reader.Read())
+            {
+                rank = reader.GetInt32(0);
+            }
+
+            // for security reasons...
+            // close reader
+            reader.Close();
+            reader = null;
+            // dispose of database commands
+            dbcmd.Dispose();
+            dbcmd = null;
+            return rank+1;
+        }
+
 	    // add users to the database
 	    public bool addUser(string username, string password) {
 		    SQLiteCommand dbcmd = dbcon.CreateCommand();
